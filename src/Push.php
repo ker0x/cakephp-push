@@ -17,7 +17,7 @@ class Push
      * Constructor
      *
      * @param AdapterInterface $adapter [description]
-     * @param array            $config  Array of configuration settings
+     * @param array $config Array of configuration settings
      */
     public function __construct(AdapterInterface $adapter)
     {
@@ -37,8 +37,8 @@ class Push
     /**
      * Send a downstream message to one or more devices.
      *
-     * @param  mixed $ids        Devices'ids
-     * @param  array $payload    The notification and/or some datas
+     * @param  mixed $ids Devices'ids
+     * @param  array $payload The notification and/or some datas
      * @param  array $parameters Parameters for the request
      *
      * @return bool
