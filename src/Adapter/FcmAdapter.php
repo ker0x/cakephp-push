@@ -2,6 +2,7 @@
 
 namespace ker0x\Push\Adapter;
 
+use Cake\Core\InstanceConfigTrait;
 use Cake\Network\Http\Client;
 use Cake\Utility\Hash;
 use ker0x\Push\AdapterInterface;
