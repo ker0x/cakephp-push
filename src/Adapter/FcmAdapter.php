@@ -88,7 +88,7 @@ class FcmAdapter implements AdapterInterface
     /**
      * @inheritdoc
      */
-    public function send($ids = null, array $payload = [], array $parameters = [])
+    public function send($ids, array $payload, array $parameters)
     {
         $ids = $this->_checkIds($ids);
 

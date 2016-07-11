@@ -14,7 +14,7 @@ interface AdapterInterface
      *
      * @return bool
      */
-    public function send($ids, $payload, $parameters);
+    public function send($ids, array $payload, array $parameters);
 
     /**
      * Return the response of the push
