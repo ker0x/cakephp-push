@@ -53,5 +53,4 @@ class Push
     {
         return $this->getAdapter()->response();
     }
-
 }

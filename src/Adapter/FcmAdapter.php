@@ -298,5 +298,4 @@ class FcmAdapter implements AdapterInterface
 
         return $options;
     }
-
 }

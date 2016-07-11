@@ -22,5 +22,4 @@ interface AdapterInterface
      * @return string
      */
     public function response();
-
 }
