@@ -15,7 +15,7 @@ class FcmTest extends IntegrationTestCase
     {
         $adapter = new FcmAdapter([
             'api' => [
-                'key' => getenv('GCM_API_KEY')
+                'key' => getenv('FCM_API_KEY')
             ],
             'http' => [
                 'ssl_verify_peer' => false,
