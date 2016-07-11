@@ -2,9 +2,6 @@
 
 namespace ker0x\Push;
 
-use Cake\Core\InstanceConfigTrait;
-use Cake\Network\Http\Client;
-
 class Push
 {
 
@@ -17,7 +14,6 @@ class Push
      * Constructor
      *
      * @param AdapterInterface $adapter [description]
-     * @param array $config Array of configuration settings
      */
     public function __construct(AdapterInterface $adapter)
     {
