@@ -57,7 +57,7 @@ class FcmTest extends IntegrationTestCase
 
     public function testCheckTokensTypeException()
     {
-        $this->setExpectedException(Exception::class);
+        $this->expectException(Exception::class);
         $this->push->send(
             1234567890,
             [

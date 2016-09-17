@@ -25,7 +25,7 @@ matrix:
 install:
   - composer self-update
   - composer config -g github-oauth.github.com $GITHUB_COMPOSER_AUTH
-  - composer install --prefer-dist --no-interaction
+  - composer install --prefer-dist --no-interaction --dev
 
 before_script:
   - sh -c "if [ '$PHPCS' = '1' ]; then composer require cakephp/cakephp-codesniffer:dev-master; fi"
