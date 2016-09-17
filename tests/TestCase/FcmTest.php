@@ -57,6 +57,7 @@ class FcmTest extends IntegrationTestCase
 
     public function testCheckTokensTypeException()
     {
+        $this->expectException(Exception::class);
         $this->push->send(
             1234567890,
             [
@@ -74,8 +75,6 @@ class FcmTest extends IntegrationTestCase
                 'dry_run' => true
             ]
         );
-
-        $this->assertException(Exception::class);
     }
 
     public function tearDown()

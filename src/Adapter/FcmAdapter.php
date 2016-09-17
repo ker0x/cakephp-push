@@ -179,7 +179,7 @@ class FcmAdapter implements AdapterInterface
             throw new Exception(__('Tokens must be a string or an array with at least 1 token.'));
         }
 
-        $tokens = (array) $tokens;
+        $tokens = (array)$tokens;
 
         $totalTokens = count($tokens);
         if ($totalTokens === 0 || $totalTokens > 1000) {
@@ -238,7 +238,7 @@ class FcmAdapter implements AdapterInterface
 
         // Convert all data into string
         foreach ($data as $key => $value) {
-            $data[$key] = (string) $value;
+            $data[$key] = (string)$value;
         }
 
         return $data;
@@ -260,15 +260,15 @@ class FcmAdapter implements AdapterInterface
         $parameters = Hash::merge($this->config('parameters'), $parameters);
 
         if (isset($parameters['time_to_live']) && !is_int($parameters['time_to_live'])) {
-            $parameters['time_to_live'] = (int) $parameters['time_to_live'];
+            $parameters['time_to_live'] = (int)$parameters['time_to_live'];
         }
 
         if (isset($parameters['delay_while_idle']) && !is_bool($parameters['delay_while_idle'])) {
-            $parameters['delay_while_idle'] = (bool) $parameters['delay_while_idle'];
+            $parameters['delay_while_idle'] = (bool)$parameters['delay_while_idle'];
         }
 
         if (isset($parameters['dry_run']) && !is_bool($parameters['dry_run'])) {
-            $parameters['dry_run'] = (bool) $parameters['dry_run'];
+            $parameters['dry_run'] = (bool)$parameters['dry_run'];
         }
 
         return $parameters;
