@@ -57,29 +57,24 @@ class FcmTest extends IntegrationTestCase
 
     public function testCheckTokensTypeException()
     {
-        $this->expectException(Exception::class);
-        try {
-            $this->push->send(
-                1234567890,
-                [
-                    'notification' => [
-                        'title' => 'Hello World',
-                        'body' => 'My awesome Hello World!'
-                    ],
-                    'data' => [
-                        'data-1' => 'Lorem ipsum',
-                        'data-2' => 1234,
-                        'data-3' => true
-                    ]
+        $this->expectExceptionMessage('Tokens must be a string or an array with at least 1 token.');
+        $this->push->send(
+            1234567890,
+            [
+                'notification' => [
+                    'title' => 'Hello World',
+                    'body' => 'My awesome Hello World!'
                 ],
-                [
-                    'dry_run' => true
+                'data' => [
+                    'data-1' => 'Lorem ipsum',
+                    'data-2' => 1234,
+                    'data-3' => true
                 ]
-            );
-        } catch (Exception $e) {
-            $this->assertEquals('Tokens must be a string or an array with at least 1 token.', $e->getMessage());
-        }
-        $this->fail();
+            ],
+            [
+                'dry_run' => true
+            ]
+        );
     }
 
     public function tearDown()
