@@ -1,5 +1,4 @@
 <?php
-
 namespace ker0x\Push;
 
 interface AdapterInterface

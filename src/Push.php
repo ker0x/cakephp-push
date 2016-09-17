@@ -1,9 +1,5 @@
 <?php
-
 namespace ker0x\Push;
-
-use Cake\Core\InstanceConfigTrait;
-use Cake\Network\Http\Client;
 
 class Push
 {
