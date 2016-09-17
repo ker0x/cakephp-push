@@ -2,8 +2,7 @@
 
 namespace ker0x\Push\Adapter;
 
-use Cake\Core\InstanceConfigTrait;
-use Cake\Network\Http\Client;
+use Cake\Http\Client;
 use Cake\Utility\Hash;
 use ker0x\Push\AdapterInterface;
 use ker0x\Push\Exception;
@@ -21,7 +20,7 @@ class FcmAdapter implements AdapterInterface
     protected $_defaultConfig = [
         'api' => [
             'key' => null,
-            'url' => 'https://fcm.googleapis.com/fcm/send'
+            'url' => 'https://fcm.googleapis.com/fcm/send',
         ],
         'parameters' => [
             'collapse_key' => null,
@@ -29,9 +28,9 @@ class FcmAdapter implements AdapterInterface
             'delay_while_idle' => false,
             'dry_run' => false,
             'time_to_live' => 0,
-            'restricted_package_name' => null
+            'restricted_package_name' => null,
         ],
-        'http' => []
+        'http' => [],
     ];
 
     /**
@@ -51,7 +50,7 @@ class FcmAdapter implements AdapterInterface
         'body_loc_key',
         'body_loc_args',
         'title_loc_key',
-        'title_loc_args'
+        'title_loc_args',
     ];
 
     /**
@@ -81,22 +80,16 @@ class FcmAdapter implements AdapterInterface
             '400' => __('Error 400. The request could not be parsed as JSON.'),
             '401' => __('Error 401. Unable to authenticating the sender account.'),
             '500' => __('Error 500. Internal Server Error.'),
-            '503' => __('Error 503. Service Unavailable.')
+            '503' => __('Error 503. Service Unavailable.'),
         ];
     }
 
     /**
-     * Send a downstream message to one or more devices.
-     *
-     * @param  mixed $ids Devices'ids
-     * @param  array $payload The notification and/or some datas
-     * @param  array $parameters Parameters for the request
-     *
-     * @return bool
+     * @inheritdoc
      */
-    public function send($ids, array $payload, array $parameters)
+    public function send($tokens = null, array $payload = [], array $parameters = [])
     {
-        $ids = $this->_checkIds($ids);
+        $tokens = $this->_checkTokens($tokens);
 
         if (!is_array($payload)) {
             throw new Exception(__('Payload must be an array.'));
@@ -112,15 +105,13 @@ class FcmAdapter implements AdapterInterface
 
         $parameters = $this->_checkParameters($parameters);
 
-        $message = $this->_buildMessage($ids, $payload, $parameters);
+        $message = $this->_buildMessage($tokens, $payload, $parameters);
 
         return $this->_executePush($message);
     }
 
     /**
-     * Return the response of the push
-     *
-     * @return string
+     * @inheritdoc
      */
     public function response()
     {
@@ -155,14 +146,14 @@ class FcmAdapter implements AdapterInterface
     /**
      * Build the message from the ids, payload and parameters
      *
-     * @param array|string $ids Devices'ids
+     * @param array|string $tokens Devices'ids
      * @param array $payload The notification and/or some datas
      * @param array $parameters Parameters for the GCM request
      * @return string
      */
-    protected function _buildMessage($ids, $payload, $parameters)
+    protected function _buildMessage($tokens, $payload, $parameters)
     {
-        $message = (count($ids) > 1) ? ['registration_ids' => $ids] : ['to' => current($ids)];
+        $message = (count($tokens) > 1) ? ['registration_ids' => $tokens] : ['to' => current($tokens)];
 
         if (!empty($payload)) {
             $message += $payload;
@@ -176,27 +167,26 @@ class FcmAdapter implements AdapterInterface
     }
 
     /**
-     * Check if the ids are correct
+     * Check if the tokens are correct
      *
-     * @param mixed $ids Devices'ids
+     * @param mixed $tokens Device's token
      * @throws Exception
      * @return array
      */
-    protected function _checkIds($ids)
+    protected function _checkTokens($tokens)
     {
-        if (is_string($ids)) {
-            $ids = (array)$ids;
+        if (!is_string($tokens) || !is_array($tokens)) {
+            throw new Exception(__('Tokens must be a string or an array with at least 1 token.'));
         }
 
-        if (is_null($ids) || !is_array($ids) || empty($ids)) {
-            throw new Exception(__('Ids must be a string or an array with at least 1 token.'));
+        $tokens = (array) $tokens;
+
+        $totalTokens = count($tokens);
+        if ($totalTokens === 0 || $totalTokens > 1000) {
+            throw new Exception(__('Tokens must contain at least 1 and at most 1000 registration tokens.'));
         }
 
-        if (is_array($ids) && count($ids) > 1000) {
-            throw new Exception(__('Ids must contain at least 1 and at most 1000 registration tokens.'));
-        }
-
-        return $ids;
+        return $tokens;
     }
 
     /**
@@ -248,7 +238,7 @@ class FcmAdapter implements AdapterInterface
 
         // Convert all data into string
         foreach ($data as $key => $value) {
-            $data[$key] = (string)$value;
+            $data[$key] = (string) $value;
         }
 
         return $data;
@@ -270,15 +260,15 @@ class FcmAdapter implements AdapterInterface
         $parameters = Hash::merge($this->config('parameters'), $parameters);
 
         if (isset($parameters['time_to_live']) && !is_int($parameters['time_to_live'])) {
-            $parameters['time_to_live'] = (int)$parameters['time_to_live'];
+            $parameters['time_to_live'] = (int) $parameters['time_to_live'];
         }
 
         if (isset($parameters['delay_while_idle']) && !is_bool($parameters['delay_while_idle'])) {
-            $parameters['delay_while_idle'] = (bool)$parameters['delay_while_idle'];
+            $parameters['delay_while_idle'] = (bool) $parameters['delay_while_idle'];
         }
 
         if (isset($parameters['dry_run']) && !is_bool($parameters['dry_run'])) {
-            $parameters['dry_run'] = (bool)$parameters['dry_run'];
+            $parameters['dry_run'] = (bool) $parameters['dry_run'];
         }
 
         return $parameters;
@@ -300,10 +290,11 @@ class FcmAdapter implements AdapterInterface
             'type' => 'json',
             'headers' => [
                 'Authorization' => 'key=' . $this->config('api.key'),
-                'Content-Type' => 'application/json'
-            ]
+                'Content-Type' => 'application/json',
+            ],
         ]);
 
         return $options;
     }
+
 }

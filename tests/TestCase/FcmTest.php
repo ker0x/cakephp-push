@@ -3,6 +3,7 @@ namespace ker0x\Push\Test\TestCase;
 
 use Cake\TestSuite\IntegrationTestCase;
 use ker0x\Push\Adapter\FcmAdapter;
+use ker0x\Push\Exception;
 use ker0x\Push\Push;
 
 class FcmTest extends IntegrationTestCase
@@ -52,6 +53,29 @@ class FcmTest extends IntegrationTestCase
         $this->assertTrue($result);
         $this->assertEquals(1, $response['success']);
         $this->assertEquals(0, $response['failure']);
+    }
+
+    public function testCheckTokensTypeException()
+    {
+        $this->push->send(
+            1234567890,
+            [
+                'notification' => [
+                    'title' => 'Hello World',
+                    'body' => 'My awesome Hello World!'
+                ],
+                'data' => [
+                    'data-1' => 'Lorem ipsum',
+                    'data-2' => 1234,
+                    'data-3' => true
+                ]
+            ],
+            [
+                'dry_run' => true
+            ]
+        );
+
+        $this->assertException(Exception::class);
     }
 
     public function tearDown()

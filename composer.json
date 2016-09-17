@@ -3,11 +3,7 @@
     "type": "cakephp-plugin",
     "description": "CakePHP plugin to send notifications to devices through services",
     "homepage": "https://github.com/ker0x/cakephp-push",
-    "keywords": [
-        "cakephp",
-        "notifications",
-        "firebase cloud messaging",
-        "fcm"
+    "keywords": ["cakephp", "push", "notifications", "fcm"
     ],
     "license": "MIT",
     "version": "0.0.1",
@@ -26,7 +22,7 @@
     },
     "require-dev": {
         "cakephp/cakephp": "~3.0",
-        "phpunit/phpunit": "*",
+        "phpunit/phpunit": "5.0",
         "cakephp/cakephp-codesniffer": "dev-master",
         "satooshi/php-coveralls": "dev-master"
     },

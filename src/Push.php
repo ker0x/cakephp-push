@@ -2,6 +2,9 @@
 
 namespace ker0x\Push;
 
+use Cake\Core\InstanceConfigTrait;
+use Cake\Network\Http\Client;
+
 class Push
 {
 
@@ -11,9 +14,9 @@ class Push
     protected $adapter;
 
     /**
-     * Constructor
+     * Constructor.
      *
-     * @param AdapterInterface $adapter [description]
+     * @param AdapterInterface $adapter The adapter
      */
     public function __construct(AdapterInterface $adapter)
     {
@@ -33,19 +36,19 @@ class Push
     /**
      * Send a downstream message to one or more devices.
      *
-     * @param  mixed $ids Devices'ids
+     * @param  mixed $tokens Device's token
      * @param  array $payload The notification and/or some datas
      * @param  array $parameters Parameters for the request
      *
      * @return bool
      */
-    public function send($ids = null, array $payload = [], array $parameters = [])
+    public function send($tokens = null, array $payload = [], array $parameters = [])
     {
-        return $this->getAdapter()->send($ids, $payload, $parameters);
+        return $this->getAdapter()->send($tokens, $payload, $parameters);
     }
 
     /**
-     * Return the response of the push
+     * Return the response of the push.
      *
      * @return string
      */
