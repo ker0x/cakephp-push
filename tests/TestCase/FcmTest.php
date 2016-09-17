@@ -76,10 +76,10 @@ class FcmTest extends IntegrationTestCase
                     'dry_run' => true
                 ]
             );
-            $this->fail();
         } catch (Exception $e) {
             $this->assertEquals('Tokens must be a string or an array with at least 1 token.', $e->getMessage());
         }
+        $this->fail();
     }
 
     public function tearDown()
