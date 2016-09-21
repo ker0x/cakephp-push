@@ -46,30 +46,30 @@ Configure::write('App', [
     'cssBaseUrl' => 'css/',
     'paths' => [
         'plugins' => [APP . 'Plugin' . DS],
-        'templates' => [APP . 'Template' . DS]
-    ]
+        'templates' => [APP . 'Template' . DS],
+    ],
 ]);
 
 Configure::write('Session', [
-    'defaults' => 'php'
+    'defaults' => 'php',
 ]);
 
 Cache::config([
     '_cake_core_' => [
         'engine' => 'File',
         'prefix' => 'cake_core_',
-        'serialize' => true
+        'serialize' => true,
     ],
     '_cake_model_' => [
         'engine' => 'File',
         'prefix' => 'cake_model_',
-        'serialize' => true
+        'serialize' => true,
     ],
     'default' => [
         'engine' => 'File',
         'prefix' => 'default_',
-        'serialize' => true
-    ]
+        'serialize' => true,
+    ],
 ]);
 
 // Ensure default test connection is defined
@@ -85,7 +85,7 @@ ConnectionManager::config('test', [
     'database' => getenv('db_database'),
     'username' => getenv('db_login'),
     'password' => getenv('db_password'),
-    'timezone' => 'UTC'
+    'timezone' => 'UTC',
 ]);
 
 Log::config([
@@ -98,7 +98,20 @@ Log::config([
         'engine' => 'Cake\Log\Engine\FileLog',
         'levels' => ['warning', 'error', 'critical', 'alert', 'emergency'],
         'file' => 'error',
-    ]
+    ],
+]);
+
+Configure::write([
+    'Push' => [
+        'adapters' => [
+            'Fcm' => [
+                'api' => [
+                    'key' => '1234567890',
+                    'url' => 'https://fcm.googleapis.com/fcm/send',
+                ],
+            ],
+        ],
+    ],
 ]);
 
 Plugin::load('ker0x\Push', ['path' => ROOT]);

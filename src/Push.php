@@ -32,15 +32,11 @@ class Push
     /**
      * Send a downstream message to one or more devices.
      *
-     * @param  mixed $tokens Device's token
-     * @param  array $payload The notification and/or some datas
-     * @param  array $parameters Parameters for the request
-     *
      * @return bool
      */
-    public function send($tokens = null, array $payload = [], array $parameters = [])
+    public function send()
     {
-        return $this->getAdapter()->send($tokens, $payload, $parameters);
+        return $this->getAdapter()->send();
     }
 
     /**
