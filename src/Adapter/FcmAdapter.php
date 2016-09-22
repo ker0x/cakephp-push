@@ -6,7 +6,7 @@ use Cake\Core\InstanceConfigTrait;
 use Cake\Http\Client;
 use Cake\Utility\Hash;
 use ker0x\Push\AdapterInterface;
-use kerox\Push\Exception\InvalidAdapterException;
+use ker0x\Push\Exception\InvalidAdapterException;
 use ker0x\Push\Exception\InvalidDataException;
 use ker0x\Push\Exception\InvalidNotificationException;
 use ker0x\Push\Exception\InvalidParametersException;
@@ -18,24 +18,46 @@ class FcmAdapter implements AdapterInterface
     use InstanceConfigTrait;
 
     /**
+     * Array for devices's token
+     *
      * @var array
      */
     protected $tokens = [];
 
     /**
+     * Array for the notification
+     *
      * @var array
      */
     protected $notification = [];
 
     /**
+     * Array of datas
+     *
      * @var array
      */
     protected $datas = [];
 
     /**
+     * Array of request parameters
+     *
      * @var array
      */
     protected $parameters = [];
+
+    /**
+     * Array of payload
+     *
+     * @var array
+     */
+    protected $payload = [];
+
+    /**
+     * Response of the request
+     *
+     * @var \Cake\Http\Client\Response
+     */
+    protected $response;
 
     /**
      * Default config
@@ -75,10 +97,10 @@ class FcmAdapter implements AdapterInterface
 
     /**
      * FcmAdapter constructor.
-     * @param array $config
-     * @throws \kerox\Push\Exception\InvalidAdapterException
+     *
+     * @throws \ker0x\Push\Exception\InvalidAdapterException
      */
-    public function __construct(array $config = [])
+    public function __construct()
     {
         $config = Configure::read('Push.adapters.Fcm');
         $this->config($config);
@@ -89,6 +111,8 @@ class FcmAdapter implements AdapterInterface
     }
 
     /**
+     * Send the request
+     *
      * @return bool
      */
     public function send()
@@ -97,14 +121,18 @@ class FcmAdapter implements AdapterInterface
     }
 
     /**
+     * Display the response of the request
      *
+     * @return array
      */
     public function response()
     {
-        // TODO: Implement response() method.
+        return $this->response->json;
     }
 
     /**
+     * Getter for tokens
+     *
      * @return array
      */
     public function getTokens(): array
@@ -113,6 +141,8 @@ class FcmAdapter implements AdapterInterface
     }
 
     /**
+     * Setter for tokens
+     *
      * @param array $tokens
      * @return $this
      */
@@ -125,6 +155,8 @@ class FcmAdapter implements AdapterInterface
     }
 
     /**
+     * Getter for notification
+     *
      * @return array
      */
     public function getNotification(): array
@@ -133,6 +165,8 @@ class FcmAdapter implements AdapterInterface
     }
 
     /**
+     * Setter for notification
+     *
      * @param array $notification
      * @return $this
      */
@@ -148,6 +182,8 @@ class FcmAdapter implements AdapterInterface
     }
 
     /**
+     * Getter for datas
+     *
      * @return array
      */
     public function getDatas(): array
@@ -156,6 +192,8 @@ class FcmAdapter implements AdapterInterface
     }
 
     /**
+     * Setter for datas
+     *
      * @param array $datas
      * @return $this
      */
@@ -174,6 +212,8 @@ class FcmAdapter implements AdapterInterface
     }
 
     /**
+     * Getter for parameters
+     *
      * @return array
      */
     public function getParameters(): array
@@ -182,6 +222,8 @@ class FcmAdapter implements AdapterInterface
     }
 
     /**
+     * Setter for parameters
+     *
      * @param array $parameters
      * @return $this
      */
@@ -194,7 +236,29 @@ class FcmAdapter implements AdapterInterface
     }
 
     /**
-     * @param $tokens
+     * Getter for payload
+     *
+     * @return array
+     */
+    public function getPayload(): array
+    {
+        $notification = $this->getNotification();
+        if (!empty($notification)) {
+            $this->payload['notification'] = $notification;
+        }
+
+        $datas = $this->getDatas();
+        if (!empty($datas)) {
+            $this->payload['datas'] = $datas;
+        }
+
+        return $this->payload;
+    }
+
+    /**
+     * Check tokens's array
+     *
+     * @param array $tokens
      * @return void
      * @throws \ker0x\Push\Exception\InvalidTokenException
      */
@@ -206,7 +270,9 @@ class FcmAdapter implements AdapterInterface
     }
 
     /**
-     * @param $notification
+     * Check notification's array
+     *
+     * @param array $notification
      * @return void
      * @throws \ker0x\Push\Exception\InvalidNotificationException
      */
@@ -230,7 +296,9 @@ class FcmAdapter implements AdapterInterface
     }
 
     /**
-     * @param $datas
+     * Check datas's array
+     *
+     * @param array $datas
      * @return void
      * @throws \ker0x\Push\Exception\InvalidDataException
      */
@@ -242,7 +310,9 @@ class FcmAdapter implements AdapterInterface
     }
 
     /**
-     * @param $parameters
+     * Check parameters's array
+     *
+     * @param array $parameters
      * @return void
      * @throws \ker0x\Push\Exception\InvalidParametersException
      */
@@ -254,6 +324,8 @@ class FcmAdapter implements AdapterInterface
     }
 
     /**
+     * Execute the push
+     *
      * @return bool
      */
     private function _executePush()
@@ -262,37 +334,24 @@ class FcmAdapter implements AdapterInterface
         $options = $this->_getHttpOptions();
 
         $http = new Client();
-        $this->_response = $http->post($this->config('api.url'), $message, $options);
+        $this->response = $http->post($this->config('api.url'), $message, $options);
 
-        return ($this->_response->code === '200') ? true : false;
+        return ($this->response->code === '200') ? true : false;
     }
 
     /**
+     * Build the message
      *
-     */
-    private function _buildPayload()
-    {
-        $notification = $this->getNotification();
-        if (!empty($notification)) {
-            $this->payload['notification'] = $notification;
-        }
-
-        $datas = $this->getDatas();
-        if (!empty($datas)) {
-            $this->payload['datas'] = $datas;
-        }
-    }
-
-    /**
-     *
+     * @return string
      */
     private function _buildMessage()
     {
         $tokens = $this->getTokens();
         $message = (count($tokens) > 1) ? ['registration_ids' => $tokens] : ['to' => current($tokens)];
 
-        if (!empty($this->payload)) {
-            $message += $this->payload;
+        $payload = $this->getPayload();
+        if (!empty($payload)) {
+            $message += $payload;
         }
 
         $parameters = $this->getParameters();
@@ -306,7 +365,6 @@ class FcmAdapter implements AdapterInterface
     /**
      * Return options for the HTTP request
      *
-     * @throws \Exception
      * @return array $options
      */
     private function _getHttpOptions()

@@ -1,6 +1,7 @@
 <?php
 namespace ker0x\Push\Test\TestCase;
 
+use Cake\Core\Configure;
 use Cake\TestSuite\IntegrationTestCase;
 use ker0x\Push\Adapter\FcmAdapter;
 use ker0x\Push\Exception\InvalidAdapterException;
@@ -11,15 +12,20 @@ use ker0x\Push\Exception\InvalidTokenException;
 
 class FcmTest extends IntegrationTestCase
 {
+
     public $adapter;
 
-    public $push;
+    public $api_key;
 
-    public $tokens;
+    public $token;
 
     public function setUp()
     {
         $this->adapter = new FcmAdapter();
+
+        $this->api_key = getenv('FCM_API_KEY');
+
+        $this->token = getenv('TOKEN');
     }
 
     public function testEmptyTokens()
@@ -123,6 +129,87 @@ class FcmTest extends IntegrationTestCase
             'time_to_live' => 0,
             'restricted_package_name' => null
         ], $parameters);
+    }
+
+    public function testGetEmptyPayload()
+    {
+        $payload = $this->adapter->getPayload();
+        $this->assertEquals([], $payload);
+    }
+
+    public function testGetFilledPayload()
+    {
+        $this->adapter
+            ->setNotification(['title' => 'Hello world'])
+            ->setDatas([
+                'data-1' => 'Lorem ipsum',
+                'data-2' => 1234,
+                'data-3' => true,
+                'data-4' => false,
+            ]);
+
+        $payload = $this->adapter->getPayload();
+        $this->assertEquals([
+            'notification' => [
+                'title' => 'Hello world',
+                'icon' => 'myicon',
+            ],
+            'datas' => [
+                'data-1' => 'Lorem ipsum',
+                'data-2' => '1234',
+                'data-3' => 'true',
+                'data-4' => 'false',
+            ]
+        ], $payload);
+    }
+
+    public function testSendAndResponse()
+    {
+        Configure::write('Push.adapters.Fcm.api.key', $this->api_key);
+        $adapter = new FcmAdapter();
+        $adapter
+            ->setTokens([$this->token])
+            ->setNotification([
+                'title' => 'Hello World',
+                'body' => 'My awesome Hello World!'
+            ])
+            ->setDatas([
+                'data-1' => 'Lorem ipsum',
+                'data-2' => 1234,
+                'data-3' => true
+            ])
+            ->setParameters([
+                'dry_run' => false
+            ]);
+
+        $result = $adapter->send();
+        $response = $adapter->response();
+
+        $this->assertTrue($result);
+        $this->assertEquals(1, $response['success']);
+        $this->assertEquals(0, $response['failure']);
+    }
+
+    public function testNoApiKeyAdapter()
+    {
+        Configure::write('Push.adapters.Fcm.api.key', null);
+        $this->expectException(InvalidAdapterException::class);
+        $adapter = new FcmAdapter();
+        $adapter
+            ->setTokens([$this->token])
+            ->setNotification([
+                'title' => 'Hello World',
+                'body' => 'My awesome Hello World!'
+            ])
+            ->setDatas([
+                'data-1' => 'Lorem ipsum',
+                'data-2' => 1234,
+                'data-3' => true
+            ])
+            ->setParameters([
+                'dry_run' => true
+            ])
+            ->send();
     }
 
     public function tearDown()
