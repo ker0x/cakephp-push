@@ -14,17 +14,13 @@ class FcmTest extends IntegrationTestCase
 {
 
     public $adapter;
-
     public $api_key;
-
     public $token;
 
     public function setUp()
     {
         $this->adapter = new FcmAdapter();
-
         $this->api_key = getenv('FCM_API_KEY');
-
         $this->token = getenv('TOKEN');
     }
 
@@ -179,15 +175,15 @@ class FcmTest extends IntegrationTestCase
                 'data-3' => true
             ])
             ->setParameters([
-                'dry_run' => false
+                'dry_run' => true
             ]);
 
         $result = $adapter->send();
         $response = $adapter->response();
 
         $this->assertTrue($result);
-        $this->assertEquals(1, $response['success']);
-        $this->assertEquals(0, $response['failure']);
+        $this->assertEquals(1, $response->json['success']);
+        $this->assertEquals(0, $response->json['failure']);
     }
 
     public function testNoApiKeyAdapter()
@@ -214,6 +210,6 @@ class FcmTest extends IntegrationTestCase
 
     public function tearDown()
     {
-        unset($this->adapter);
+        unset($this->adapter, $this->api_key, $this->token);
     }
 }

@@ -123,11 +123,11 @@ class FcmAdapter implements AdapterInterface
     /**
      * Display the response of the request
      *
-     * @return array
+     * @return \Cake\Http\Client\Response
      */
     public function response()
     {
-        return $this->response->json;
+        return $this->response;
     }
 
     /**
