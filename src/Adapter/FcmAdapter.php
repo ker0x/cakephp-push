@@ -80,7 +80,7 @@ class FcmAdapter implements AdapterInterface
      *
      * @var array
      */
-    protected $_allowedNotificationParameters = [
+    protected $_allowedNotificationKeys = [
         'title',
         'body',
         'icon',
@@ -135,7 +135,7 @@ class FcmAdapter implements AdapterInterface
      *
      * @return array
      */
-    public function getTokens(): array
+    public function getTokens()
     {
         return $this->tokens;
     }
@@ -143,7 +143,7 @@ class FcmAdapter implements AdapterInterface
     /**
      * Setter for tokens
      *
-     * @param array $tokens
+     * @param array $tokens Array of devices's token
      * @return $this
      */
     public function setTokens(array $tokens)
@@ -159,7 +159,7 @@ class FcmAdapter implements AdapterInterface
      *
      * @return array
      */
-    public function getNotification(): array
+    public function getNotification()
     {
         return $this->notification;
     }
@@ -167,7 +167,7 @@ class FcmAdapter implements AdapterInterface
     /**
      * Setter for notification
      *
-     * @param array $notification
+     * @param array $notification Array of keys for the notification
      * @return $this
      */
     public function setNotification(array $notification)
@@ -186,7 +186,7 @@ class FcmAdapter implements AdapterInterface
      *
      * @return array
      */
-    public function getDatas(): array
+    public function getDatas()
     {
         return $this->datas;
     }
@@ -194,7 +194,7 @@ class FcmAdapter implements AdapterInterface
     /**
      * Setter for datas
      *
-     * @param array $datas
+     * @param array $datas Array of datas for the push
      * @return $this
      */
     public function setDatas(array $datas)
@@ -216,7 +216,7 @@ class FcmAdapter implements AdapterInterface
      *
      * @return array
      */
-    public function getParameters(): array
+    public function getParameters()
     {
         return $this->parameters;
     }
@@ -224,7 +224,7 @@ class FcmAdapter implements AdapterInterface
     /**
      * Setter for parameters
      *
-     * @param array $parameters
+     * @param array $parameters Array of parameters for the push
      * @return $this
      */
     public function setParameters(array $parameters)
@@ -240,7 +240,7 @@ class FcmAdapter implements AdapterInterface
      *
      * @return array
      */
-    public function getPayload(): array
+    public function getPayload()
     {
         $notification = $this->getNotification();
         if (!empty($notification)) {
@@ -258,7 +258,7 @@ class FcmAdapter implements AdapterInterface
     /**
      * Check tokens's array
      *
-     * @param array $tokens
+     * @param array $tokens Token's array
      * @return void
      * @throws \ker0x\Push\Exception\InvalidTokenException
      */
@@ -272,7 +272,7 @@ class FcmAdapter implements AdapterInterface
     /**
      * Check notification's array
      *
-     * @param array $notification
+     * @param array $notification Notification's array
      * @return void
      * @throws \ker0x\Push\Exception\InvalidNotificationException
      */
@@ -284,7 +284,7 @@ class FcmAdapter implements AdapterInterface
 
         $notAllowedKeys = [];
         foreach ($notification as $key => $value) {
-            if (!in_array($key, $this->_allowedNotificationParameters)) {
+            if (!in_array($key, $this->_allowedNotificationKeys)) {
                 $notAllowedKeys[] = $key;
             }
         }
@@ -298,7 +298,7 @@ class FcmAdapter implements AdapterInterface
     /**
      * Check datas's array
      *
-     * @param array $datas
+     * @param array $datas Datas's array
      * @return void
      * @throws \ker0x\Push\Exception\InvalidDataException
      */
