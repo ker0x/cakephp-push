@@ -4,7 +4,7 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/ker0x/cakephp-push.svg?maxAge=2592000?style=flat-square)](https://packagist.org/packages/ker0x/cakephp-push)
 [![Latest Stable Version](https://img.shields.io/packagist/v/ker0x/cakephp-push.svg?maxAge=2592000?style=flat-square)](https://packagist.org/packages/ker0x/cakephp-push)
 [![Documentation Status](https://readthedocs.org/projects/cakephp-push/badge/?version=latest&style=flat-square)](http://cakephp-push.readthedocs.org/en/latest/?badge=latest)
-[![License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](https://packagist.org/packages/ker0x/cakephp-push)
+[![License](https://img.shields.io/packagist/l/ker0x/cakephp-push.svg?maxAge=2592000?style=flat-square)](https://packagist.org/packages/ker0x/cakephp-push)
 
 # CakePHP Push Plugin
 
