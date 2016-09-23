@@ -312,7 +312,7 @@ class FcmAdapter implements AdapterInterface
     /**
      * Check parameters's array
      *
-     * @param array $parameters
+     * @param array $parameters Parameters's array
      * @return void
      * @throws \ker0x\Push\Exception\InvalidParametersException
      */
