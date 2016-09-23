@@ -30,7 +30,7 @@ Get an API key
 
 Go to https://console.developers.google.com/apis/library and enable Firebase Cloud Messaging API
 
-Use the Gcm class
+Use the Push class
 ----
 
 First, you have to include it :
@@ -43,7 +43,7 @@ Then, in your code:
 
 .. code:: php
 
-    $Push = new Push(['api' => ['key' => '*****']]);
+    $push = new Push(['api' => ['key' => '*****']]);
     $Gcm->send($ids, $payload, $parameters);
 
 where:
