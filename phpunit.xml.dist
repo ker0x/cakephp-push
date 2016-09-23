@@ -6,20 +6,19 @@
         syntaxCheck="false"
         bootstrap="./tests/bootstrap.php"
 >
-    <php>
-        <ini name="memory_limit" value="-1"/>
-        <ini name="apc.enable_cli" value="1"/>
-    </php>
-
     <!-- Add any additional test suites you want to run here -->
     <testsuites>
-        <testsuite name="Version Test Suite">
+        <testsuite name="Push Test Suite">
             <directory>./tests/TestCase</directory>
         </testsuite>
     </testsuites>
 
-    <!-- Prevent coverage reports from looking in tests and vendors -->
     <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./src</directory>
+        </whitelist>
+
+        <!-- Prevent coverage reports from looking in tests and vendors -->
         <blacklist>
             <directory suffix=".php">./docs</directory>
             <directory suffix=".php">./vendor</directory>
@@ -27,4 +26,8 @@
             <file>./tests/bootstrap.php</file>
         </blacklist>
     </filter>
+
+    <logging>
+        <log type="coverage-clover" target="build/logs/clover.xml"/>
+    </logging>
 </phpunit>

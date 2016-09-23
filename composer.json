@@ -1,16 +1,17 @@
 {
     "name": "ker0x/cakephp-push",
     "type": "cakephp-plugin",
-    "description": "CakePHP plugin to send notifications to devices through services",
+    "description": "CakePHP plugin to send downstream message to devices through services",
     "homepage": "https://github.com/ker0x/cakephp-push",
-    "keywords": ["cakephp", "push", "notifications", "fcm"
-    ],
+    "keywords": ["cakephp", "push", "message", "fcm"],
     "license": "MIT",
     "version": "0.0.1",
     "authors": [
         {
             "name": "Romain Monteil",
-            "email": "monteil.romain@gmail.com"
+            "homepage": "http://kerox.fr",
+            "email": "monteil.romain@gmail.com",
+            "role": "Author"
         }
     ],
     "support": {
@@ -18,7 +19,8 @@
         "source": "https://github.com/ker0x/cakephp-push"
     },
     "require": {
-        "php": ">=5.5"
+        "php": ">=5.6",
+        "cakephp/cakephp": ">=3.3.0 <4.0"
     },
     "require-dev": {
         "cakephp/cakephp": "~3.0",

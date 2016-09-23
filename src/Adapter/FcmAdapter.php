@@ -1,11 +1,16 @@
 <?php
 namespace ker0x\Push\Adapter;
 
+use Cake\Core\Configure;
 use Cake\Core\InstanceConfigTrait;
 use Cake\Http\Client;
 use Cake\Utility\Hash;
 use ker0x\Push\AdapterInterface;
-use ker0x\Push\Exception;
+use ker0x\Push\Exception\InvalidAdapterException;
+use ker0x\Push\Exception\InvalidDataException;
+use ker0x\Push\Exception\InvalidNotificationException;
+use ker0x\Push\Exception\InvalidParametersException;
+use ker0x\Push\Exception\InvalidTokenException;
 
 class FcmAdapter implements AdapterInterface
 {
@@ -13,32 +18,69 @@ class FcmAdapter implements AdapterInterface
     use InstanceConfigTrait;
 
     /**
+     * Array for devices's token
+     *
+     * @var array
+     */
+    protected $tokens = [];
+
+    /**
+     * Array for the notification
+     *
+     * @var array
+     */
+    protected $notification = [];
+
+    /**
+     * Array of datas
+     *
+     * @var array
+     */
+    protected $datas = [];
+
+    /**
+     * Array of request parameters
+     *
+     * @var array
+     */
+    protected $parameters = [];
+
+    /**
+     * Array of payload
+     *
+     * @var array
+     */
+    protected $payload = [];
+
+    /**
+     * Response of the request
+     *
+     * @var \Cake\Http\Client\Response
+     */
+    protected $response;
+
+    /**
      * Default config
      *
      * @var array
      */
     protected $_defaultConfig = [
-        'api' => [
-            'key' => null,
-            'url' => 'https://fcm.googleapis.com/fcm/send',
-        ],
         'parameters' => [
             'collapse_key' => null,
             'priority' => 'normal',
-            'delay_while_idle' => false,
             'dry_run' => false,
             'time_to_live' => 0,
-            'restricted_package_name' => null,
+            'restricted_package_name' => null
         ],
-        'http' => [],
+        'http' => []
     ];
 
     /**
-     * List of parameters available to use in notification messages.
+     * List of keys allowed to be used in notification array.
      *
      * @var array
      */
-    protected $_allowedNotificationParameters = [
+    protected $_allowedNotificationKeys = [
         'title',
         'body',
         'icon',
@@ -54,111 +96,265 @@ class FcmAdapter implements AdapterInterface
     ];
 
     /**
-     * Error code and message.
+     * FcmAdapter constructor.
      *
-     * @var array
+     * @throws \ker0x\Push\Exception\InvalidAdapterException
      */
-    protected $_errorMessages = [];
-
-    /**
-     * Response of the request
-     *
-     * @var object
-     */
-    protected $_response = null;
-
-    /**
-     * Constructor
-     *
-     * @param array $config Array of configuration settings
-     */
-    public function __construct(array $config = [])
+    public function __construct()
     {
+        $config = Configure::read('Push.adapters.Fcm');
         $this->config($config);
 
-        $this->_errorMessages = [
-            '400' => __('Error 400. The request could not be parsed as JSON.'),
-            '401' => __('Error 401. Unable to authenticating the sender account.'),
-            '500' => __('Error 500. Internal Server Error.'),
-            '503' => __('Error 503. Service Unavailable.'),
-        ];
+        if ($this->config('api.key') === null) {
+            throw new InvalidAdapterException("No API key set. Push not triggered");
+        }
     }
 
     /**
-     * @inheritdoc
+     * Send the request
+     *
+     * @return bool
      */
-    public function send($tokens = null, array $payload = [], array $parameters = [])
+    public function send()
     {
-        $tokens = $this->_checkTokens($tokens);
-
-        if (!is_array($payload)) {
-            throw new Exception(__('Payload must be an array.'));
-        }
-
-        if (isset($payload['notification'])) {
-            $payload['notification'] = $this->_checkNotification($payload['notification']);
-        }
-
-        if (isset($payload['data'])) {
-            $payload['data'] = $this->_checkData($payload['data']);
-        }
-
-        $parameters = $this->_checkParameters($parameters);
-
-        $message = $this->_buildMessage($tokens, $payload, $parameters);
-
-        return $this->_executePush($message);
+        return $this->_executePush();
     }
 
     /**
-     * @inheritdoc
+     * Display the response of the request
+     *
+     * @return \Cake\Http\Client\Response
      */
     public function response()
     {
-        if ($this->_response->code !== '200') {
-            $errorMessage = __('There was an error while sending the push');
-            if (array_key_exists($this->_response->code, $this->_errorMessages)) {
-                $errorMessage = $this->_errorMessages[$this->_response->code];
-            }
-            throw new Exception($errorMessage);
-        }
-
-        return json_decode($this->_response->body, true);
+        return $this->response;
     }
 
     /**
-     * Send the message throught a POST request to the GCM servers
+     * Getter for tokens
      *
-     * @param string $message The message to send
-     * @throws Exception
+     * @return array
+     */
+    public function getTokens()
+    {
+        return $this->tokens;
+    }
+
+    /**
+     * Setter for tokens
+     *
+     * @param array $tokens Array of devices's token
+     * @return $this
+     */
+    public function setTokens(array $tokens)
+    {
+        $this->_checkTokens($tokens);
+        $this->tokens = $tokens;
+
+        return $this;
+    }
+
+    /**
+     * Getter for notification
+     *
+     * @return array
+     */
+    public function getNotification()
+    {
+        return $this->notification;
+    }
+
+    /**
+     * Setter for notification
+     *
+     * @param array $notification Array of keys for the notification
+     * @return $this
+     */
+    public function setNotification(array $notification)
+    {
+        $this->_checkNotification($notification);
+        if (!isset($notification['icon'])) {
+            $notification['icon'] = 'myicon';
+        }
+        $this->notification = $notification;
+
+        return $this;
+    }
+
+    /**
+     * Getter for datas
+     *
+     * @return array
+     */
+    public function getDatas()
+    {
+        return $this->datas;
+    }
+
+    /**
+     * Setter for datas
+     *
+     * @param array $datas Array of datas for the push
+     * @return $this
+     */
+    public function setDatas(array $datas)
+    {
+        $this->_checkDatas($datas);
+        foreach ($datas as $key => $value) {
+            if (is_bool($value)) {
+                $value = ($value) ? 'true' : 'false';
+            }
+            $datas[$key] = (string)$value;
+        }
+        $this->datas = $datas;
+
+        return $this;
+    }
+
+    /**
+     * Getter for parameters
+     *
+     * @return array
+     */
+    public function getParameters()
+    {
+        return $this->parameters;
+    }
+
+    /**
+     * Setter for parameters
+     *
+     * @param array $parameters Array of parameters for the push
+     * @return $this
+     */
+    public function setParameters(array $parameters)
+    {
+        $this->_checkParameters($parameters);
+        $this->parameters = Hash::merge($this->config('parameters'), $parameters);
+
+        return $this;
+    }
+
+    /**
+     * Getter for payload
+     *
+     * @return array
+     */
+    public function getPayload()
+    {
+        $notification = $this->getNotification();
+        if (!empty($notification)) {
+            $this->payload['notification'] = $notification;
+        }
+
+        $datas = $this->getDatas();
+        if (!empty($datas)) {
+            $this->payload['datas'] = $datas;
+        }
+
+        return $this->payload;
+    }
+
+    /**
+     * Check tokens's array
+     *
+     * @param array $tokens Token's array
+     * @return void
+     * @throws \ker0x\Push\Exception\InvalidTokenException
+     */
+    private function _checkTokens($tokens)
+    {
+        if (empty($tokens) || count($tokens) > 1000) {
+            throw new InvalidTokenException("Array must contain at least 1 and at most 1000 tokens.");
+        }
+    }
+
+    /**
+     * Check notification's array
+     *
+     * @param array $notification Notification's array
+     * @return void
+     * @throws \ker0x\Push\Exception\InvalidNotificationException
+     */
+    private function _checkNotification($notification)
+    {
+        if (empty($notification) || !isset($notification['title'])) {
+            throw new InvalidNotificationException("Array must contain at least a key title.");
+        }
+
+        $notAllowedKeys = [];
+        foreach ($notification as $key => $value) {
+            if (!in_array($key, $this->_allowedNotificationKeys)) {
+                $notAllowedKeys[] = $key;
+            }
+        }
+
+        if (!empty($notAllowedKeys)) {
+            $notAllowedKeys = implode(', ', $notAllowedKeys);
+            throw new InvalidNotificationException("The following keys are not allowed: {$notAllowedKeys}");
+        }
+    }
+
+    /**
+     * Check datas's array
+     *
+     * @param array $datas Datas's array
+     * @return void
+     * @throws \ker0x\Push\Exception\InvalidDataException
+     */
+    private function _checkDatas($datas)
+    {
+        if (empty($datas)) {
+            throw new InvalidDataException("Array can not be empty.");
+        }
+    }
+
+    /**
+     * Check parameters's array
+     *
+     * @param array $parameters Parameters's array
+     * @return void
+     * @throws \ker0x\Push\Exception\InvalidParametersException
+     */
+    private function _checkParameters($parameters)
+    {
+        if (empty($parameters)) {
+            throw new InvalidParametersException("Array can not be empty.");
+        }
+    }
+
+    /**
+     * Execute the push
+     *
      * @return bool
      */
-    protected function _executePush($message)
+    private function _executePush()
     {
+        $message = $this->_buildMessage();
         $options = $this->_getHttpOptions();
 
         $http = new Client();
-        $this->_response = $http->post($this->config('api.url'), $message, $options);
+        $this->response = $http->post($this->config('api.url'), $message, $options);
 
-        return ($this->_response->code === '200') ? true : false;
+        return ($this->response->code === '200') ? true : false;
     }
 
     /**
-     * Build the message from the ids, payload and parameters
+     * Build the message
      *
-     * @param array|string $tokens Devices'ids
-     * @param array $payload The notification and/or some datas
-     * @param array $parameters Parameters for the GCM request
      * @return string
      */
-    protected function _buildMessage($tokens, $payload, $parameters)
+    private function _buildMessage()
     {
+        $tokens = $this->getTokens();
         $message = (count($tokens) > 1) ? ['registration_ids' => $tokens] : ['to' => current($tokens)];
 
+        $payload = $this->getPayload();
         if (!empty($payload)) {
             $message += $payload;
         }
 
+        $parameters = $this->getParameters();
         if (!empty($parameters)) {
             $message += $parameters;
         }
@@ -167,131 +363,18 @@ class FcmAdapter implements AdapterInterface
     }
 
     /**
-     * Check if the tokens are correct
-     *
-     * @param mixed $tokens Device's token
-     * @throws Exception
-     * @return array
-     */
-    protected function _checkTokens($tokens)
-    {
-        if (!is_string($tokens) || !is_array($tokens)) {
-            throw new Exception(__('Tokens must be a string or an array with at least 1 token.'));
-        }
-
-        $tokens = (array)$tokens;
-
-        $totalTokens = count($tokens);
-        if ($totalTokens === 0 || $totalTokens > 1000) {
-            throw new Exception(__('Tokens must contain at least 1 and at most 1000 registration tokens.'));
-        }
-
-        return $tokens;
-    }
-
-    /**
-     * Check if the notification array is correctly build
-     *
-     * @param array $notification The notification
-     * @throws Exception
-     * @return array $notification
-     */
-    protected function _checkNotification(array $notification = [])
-    {
-        if (!is_array($notification)) {
-            throw new Exception('Notification must be an array.');
-        }
-
-        if (empty($notification) || !isset($notification['title'])) {
-            throw new Exception('Notification\'s array must contain at least a key title.');
-        }
-
-        if (!isset($notification['icon'])) {
-            $notification['icon'] = 'myicon';
-        }
-
-        foreach ($notification as $key => $value) {
-            if (!in_array($key, $this->_allowedNotificationParameters)) {
-                throw new Exception("The key {$key} is not allowed in notifications.");
-            }
-        }
-
-        return $notification;
-    }
-
-    /**
-     * Check if the data array is correctly build
-     *
-     * @param array $data Some datas
-     * @throws Exception
-     * @return array $data
-     */
-    protected function _checkData(array $data = [])
-    {
-        if (!is_array($data)) {
-            throw new Exception('Data must ba an array.');
-        }
-
-        if (empty($data)) {
-            throw new Exception('Data\'s array can\'t be empty.');
-        }
-
-        // Convert all data into string
-        foreach ($data as $key => $value) {
-            $data[$key] = (string)$value;
-        }
-
-        return $data;
-    }
-
-    /**
-     * Check the parameters for the message
-     *
-     * @param array $parameters Parameters for the GCM request
-     * @throws Exception
-     * @return array $parameters
-     */
-    protected function _checkParameters(array $parameters = [])
-    {
-        if (!is_array($parameters)) {
-            throw new Exception(__('Parameters must be an array.'));
-        }
-
-        $parameters = Hash::merge($this->config('parameters'), $parameters);
-
-        if (isset($parameters['time_to_live']) && !is_int($parameters['time_to_live'])) {
-            $parameters['time_to_live'] = (int)$parameters['time_to_live'];
-        }
-
-        if (isset($parameters['delay_while_idle']) && !is_bool($parameters['delay_while_idle'])) {
-            $parameters['delay_while_idle'] = (bool)$parameters['delay_while_idle'];
-        }
-
-        if (isset($parameters['dry_run']) && !is_bool($parameters['dry_run'])) {
-            $parameters['dry_run'] = (bool)$parameters['dry_run'];
-        }
-
-        return $parameters;
-    }
-
-    /**
      * Return options for the HTTP request
      *
-     * @throws Exception
      * @return array $options
      */
-    protected function _getHttpOptions()
+    private function _getHttpOptions()
     {
-        if ($this->config('api.key') === null) {
-            throw new Exception(__('No API key set. Push not triggered'));
-        }
-
         $options = Hash::merge($this->config('http'), [
             'type' => 'json',
             'headers' => [
                 'Authorization' => 'key=' . $this->config('api.key'),
-                'Content-Type' => 'application/json',
-            ],
+                'Content-Type' => 'application/json'
+            ]
         ]);
 
         return $options;

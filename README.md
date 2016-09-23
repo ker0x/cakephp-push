@@ -1,5 +1,6 @@
-[![Build Status](https://img.shields.io/travis/ker0x/cakephp-push.svg?style=flat-square)](https://travis-ci.org/ker0x/cakephp-push)
-[![Code Quality](https://img.shields.io/scrutinizer/g/filp/whoops.svg?style=flat-square)](https://scrutinizer-ci.com/g/ker0x/cakephp-push/)
+[![Travis branch](https://img.shields.io/travis/ker0x/cakephp-push/master.svg?style=flat-square)](https://travis-ci.org/ker0x/cakephp-push)
+[![Coverage Status](https://img.shields.io/coveralls/ker0x/cakephp-push/master.svg?style=flat-square)](https://coveralls.io/github/ker0x/cakephp-push?branch=master)
+[![Code Quality](https://img.shields.io/scrutinizer/g/ker0x/cakephp-push.svg?style=flat-square)](https://scrutinizer-ci.com/g/ker0x/cakephp-push/)
 [![Total Downloads](https://img.shields.io/packagist/dt/ker0x/cakephp-push.svg?style=flat-square)](https://packagist.org/packages/ker0x/cakephp-push)
 [![Latest Stable Version](https://img.shields.io/packagist/v/ker0x/cakephp-push.svg?style=flat-square)](https://packagist.org/packages/ker0x/cakephp-push)
 [![Documentation Status](https://readthedocs.org/projects/cakephp-push/badge/?version=latest&style=flat-square)](http://cakephp-push.readthedocs.org/en/latest/?badge=latest)
@@ -7,12 +8,12 @@
 
 # CakePHP Push Plugin
 
-Push is a plugin for CakePHP to send downstream message to an Android or iOS device through services like Firebase Cloud Messaging
+Push is a plugin for CakePHP to send downstream message through services like Firebase Cloud Messaging
 
 ## Requirements
 
-* CakePHP >= 3.*
-* PHP >= 5.5
+* CakePHP >= 3.3.*
+* PHP >= 5.6
 
 ## Documentation
 
@@ -22,7 +23,7 @@ The documentation is available [here](http://cakephp-push.readthedocs.org/en/lat
 
 The MIT License (MIT)
 
-Copyright (c) 2015 Romain Monteil
+Copyright (c) 2016 Romain Monteil
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
