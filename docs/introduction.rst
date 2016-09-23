@@ -2,7 +2,7 @@ Introduction
 ============
 
 CakePHP Push
--------
+------------
 
 Push is a plugin for CakePHP to send downstream message through services like Firebase Cloud Messaging.
 

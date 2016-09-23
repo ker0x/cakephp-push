@@ -6,12 +6,19 @@
 Welcome to CakePHP-Push's documentation!
 ========================================
 
-Contents:
-
 .. toctree::
+   :caption: Getting Started
    :maxdepth: 2
 
+        Introduction <introduction>
+        Installation <installation>
+        Configuration <configuration>
 
+.. toctree::
+   :caption: Adapters
+   :maxdepth: 2
+
+        Fcm <adapters/fcm>
 
 Indices and tables
 ==================
