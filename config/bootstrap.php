@@ -13,15 +13,12 @@ if (file_exists(CONFIG . 'push.php')) {
     $config = [
         'adapters' => [
             'Fcm' => [
-                'enabled' => true,
                 'api' => [
                     'key' => null,
                     'url' => 'https://fcm.googleapis.com/fcm/send',
                 ],
             ]
         ],
-        'debug_mode' => (bool)Configure::read('debug'),
-        'debug_file' => LOGS . 'push.log',
     ];
 
     Configure::write('Push', $config);
