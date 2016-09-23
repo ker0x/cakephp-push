@@ -14,7 +14,7 @@ interface AdapterInterface
     /**
      * Return the response of the push
      *
-     * @return string
+     * @return mixed
      */
     public function response();
 }
