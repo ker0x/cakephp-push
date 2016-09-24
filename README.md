@@ -1,10 +1,10 @@
-[![Build](https://img.shields.io/travis/ker0x/cakephp-push/master.svg?maxAge=2592000&style=flat-square)](https://travis-ci.org/ker0x/cakephp-push)
-[![Coverage](https://img.shields.io/coveralls/ker0x/cakephp-push/master.svg?maxAge=2592000&style=flat-square)](https://coveralls.io/github/ker0x/cakephp-push)
-[![Code Quality](https://img.shields.io/scrutinizer/g/ker0x/cakephp-push.svg?maxAge=2592000&style=flat-square)](https://scrutinizer-ci.com/g/ker0x/cakephp-push/)
+[![Build](https://img.shields.io/travis/ker0x/cakephp-push/master.svg?style=flat-square)](https://travis-ci.org/ker0x/cakephp-push)
+[![Coverage](https://img.shields.io/coveralls/ker0x/cakephp-push/master.svg?style=flat-square)](https://coveralls.io/github/ker0x/cakephp-push)
+[![Code Quality](https://img.shields.io/scrutinizer/g/ker0x/cakephp-push.svg?style=flat-square)](https://scrutinizer-ci.com/g/ker0x/cakephp-push/)
 [![Total Downloads](https://img.shields.io/packagist/dt/ker0x/cakephp-push.svg?style=flat-square)](https://packagist.org/packages/ker0x/cakephp-push)
 [![Latest Stable Version](https://img.shields.io/packagist/v/ker0x/cakephp-push.svg?style=flat-square)](https://packagist.org/packages/ker0x/cakephp-push)
 [![Documentation Status](https://readthedocs.org/projects/cakephp-push/badge/?version=latest&style=flat-square)](http://cakephp-push.readthedocs.org/en/latest/?badge=latest)
-[![License](https://img.shields.io/packagist/l/ker0x/cakephp-push.svg?maxAge=2592000&style=flat-square)](https://packagist.org/packages/ker0x/cakephp-push)
+[![License](https://img.shields.io/packagist/l/ker0x/cakephp-push.svg?style=flat-square)](https://packagist.org/packages/ker0x/cakephp-push)
 
 # CakePHP Push Plugin
 
@@ -12,8 +12,8 @@ Push is a plugin for CakePHP to send downstream message through services like Fi
 
 ## Requirements
 
-* CakePHP >= 3.3.*
 * PHP >= 5.6
+* CakePHP >= 3.3.*
 
 ## Documentation
 
