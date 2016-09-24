@@ -1,8 +1,8 @@
 <?php
 namespace ker0x\Push\Adapter;
 
-use ker0x\Push\Adapter\Fcm\Fcm;
 use ker0x\Push\AdapterInterface;
+use ker0x\Push\Adapter\Fcm\Fcm;
 
 class FcmAdapter extends Fcm implements AdapterInterface
 {

@@ -3,8 +3,8 @@ namespace ker0x\Push\Test\TestCase;
 
 use Cake\Core\Configure;
 use Cake\TestSuite\IntegrationTestCase;
-use ker0x\Push\Adapter\FcmAdapter;
 use ker0x\Push\Adapter\Exception\InvalidAdapterException;
+use ker0x\Push\Adapter\FcmAdapter;
 use ker0x\Push\Adapter\Fcm\Exception\InvalidDataException;
 use ker0x\Push\Adapter\Fcm\Exception\InvalidNotificationException;
 use ker0x\Push\Adapter\Fcm\Exception\InvalidParametersException;
