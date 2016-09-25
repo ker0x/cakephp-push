@@ -8,7 +8,7 @@
 
 # CakePHP Push Plugin
 
-Push is a plugin for CakePHP to send downstream message through services like Firebase Cloud Messaging
+Push is a plugin for CakePHP to send push notification through services like Firebase Cloud Messaging
 
 ## Requirements
 
@@ -18,6 +18,10 @@ Push is a plugin for CakePHP to send downstream message through services like Fi
 ## Documentation
 
 The documentation is available [here](http://cakephp-push.readthedocs.org/en/latest/)
+
+## Supported services
+
+* [Firebase Cloud Messaging](https://firebase.google.com/docs/cloud-messaging/) (FCM)
 
 ## License
 

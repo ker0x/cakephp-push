@@ -1,9 +1,9 @@
 {
     "name": "ker0x/cakephp-push",
     "type": "cakephp-plugin",
-    "description": "CakePHP plugin to send downstream message to devices through services",
+    "description": "CakePHP plugin to send push notification through services like FCM",
     "homepage": "https://github.com/ker0x/cakephp-push",
-    "keywords": ["cakephp", "push", "message", "fcm"],
+    "keywords": ["cakephp", "push", "notification", "fcm"],
     "license": "MIT",
     "version": "1.0.1",
     "authors": [
