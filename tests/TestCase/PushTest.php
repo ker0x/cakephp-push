@@ -28,12 +28,12 @@ class PushTest extends IntegrationTestCase
                 'title' => 'Hello World',
                 'body' => 'My awesome Hello World!'
             ])
-            ->setDatas([
+            ->setData([
                 'data-1' => 'Lorem ipsum',
                 'data-2' => 1234,
                 'data-3' => true
             ])
-            ->setParameters([
+            ->setOptions([
                 'dry_run' => true
             ]);
 

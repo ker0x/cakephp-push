@@ -42,15 +42,15 @@ Usage
     $adapter
         ->setTokens($tokens)
         ->setNotification($notification)
-        ->setDatas($datas)
-        ->setParameters($parameters);
+        ->setData($data)
+        ->setOptions($options);
 
 where:
 
     - ``$tokens`` is an array of device's token. (required)
     - ``$notification`` is an array containing the notification. (optional)
-    - ``datas`` is an array with some datas that will be passed. (optional)
-    - ``$paramaters`` is an array of parameters for the notification. (optional)
+    - ``data`` is an array with some data that will be passed. (optional)
+    - ``$options`` is an array of options for the payload. (optional)
 
 Example
 -------
@@ -67,12 +67,12 @@ Example
             'title' => 'Hello World',
             'body' => 'My awesome Hello World!'
         ])
-        ->setDatas([
+        ->setData([
             'data-1' => 'Lorem ipsum',
             'data-2' => 1234,
             'data-3' => true
         ])
-        ->setParameters([
+        ->setOptions([
             'dry_run' => true
         ]);
 

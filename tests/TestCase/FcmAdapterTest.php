@@ -7,7 +7,7 @@ use ker0x\Push\Adapter\Exception\InvalidAdapterException;
 use ker0x\Push\Adapter\FcmAdapter;
 use ker0x\Push\Adapter\Fcm\Exception\InvalidDataException;
 use ker0x\Push\Adapter\Fcm\Exception\InvalidNotificationException;
-use ker0x\Push\Adapter\Fcm\Exception\InvalidParametersException;
+use ker0x\Push\Adapter\Fcm\Exception\InvalidOptionsException;
 use ker0x\Push\Adapter\Fcm\Exception\InvalidTokenException;
 
 class FcmAdapterTest extends IntegrationTestCase
@@ -81,42 +81,42 @@ class FcmAdapterTest extends IntegrationTestCase
         $this->assertEquals(['title' => 'Hello world', 'icon' => 'myicon'], $notification);
     }
 
-    public function testEmptyDatas()
+    public function testEmptyData()
     {
         $this->expectException(InvalidDataException::class);
-        $this->adapter->setDatas([]);
+        $this->adapter->setData([]);
     }
 
-    public function testGetDatas()
+    public function testGetData()
     {
-        $this->adapter->setDatas([
+        $this->adapter->setData([
             'data-1' => 'Lorem ipsum',
             'data-2' => 1234,
             'data-3' => true,
             'data-4' => false,
         ]);
-        $datas = $this->adapter->getDatas();
+        $data = $this->adapter->getData();
 
         $this->assertEquals([
             'data-1' => 'Lorem ipsum',
             'data-2' => '1234',
             'data-3' => 'true',
             'data-4' => 'false'
-        ], $datas);
+        ], $data);
     }
 
-    public function testEmptyParameters()
+    public function testEmptyOptions()
     {
-        $this->expectException(InvalidParametersException::class);
-        $this->adapter->setParameters([]);
+        $this->expectException(InvalidOptionsException::class);
+        $this->adapter->setOptions([]);
     }
 
-    public function testGetParameters()
+    public function testGetOptions()
     {
-        $this->adapter->setParameters([
+        $this->adapter->setOptions([
             'dry_run' => true,
         ]);
-        $parameters = $this->adapter->getParameters();
+        $options = $this->adapter->getOptions();
 
         $this->assertEquals([
             'collapse_key' => null,
@@ -124,7 +124,7 @@ class FcmAdapterTest extends IntegrationTestCase
             'dry_run' => true,
             'time_to_live' => 0,
             'restricted_package_name' => null
-        ], $parameters);
+        ], $options);
     }
 
     public function testGetEmptyPayload()
@@ -137,7 +137,7 @@ class FcmAdapterTest extends IntegrationTestCase
     {
         $this->adapter
             ->setNotification(['title' => 'Hello world'])
-            ->setDatas([
+            ->setData([
                 'data-1' => 'Lorem ipsum',
                 'data-2' => 1234,
                 'data-3' => true,
@@ -150,7 +150,7 @@ class FcmAdapterTest extends IntegrationTestCase
                 'title' => 'Hello world',
                 'icon' => 'myicon',
             ],
-            'datas' => [
+            'data' => [
                 'data-1' => 'Lorem ipsum',
                 'data-2' => '1234',
                 'data-3' => 'true',
@@ -169,12 +169,12 @@ class FcmAdapterTest extends IntegrationTestCase
                 'title' => 'Hello World',
                 'body' => 'My awesome Hello World!'
             ])
-            ->setDatas([
+            ->setData([
                 'data-1' => 'Lorem ipsum',
                 'data-2' => 1234,
                 'data-3' => true
             ])
-            ->setParameters([
+            ->setOptions([
                 'dry_run' => true
             ]);
 
@@ -197,12 +197,12 @@ class FcmAdapterTest extends IntegrationTestCase
                 'title' => 'Hello World',
                 'body' => 'My awesome Hello World!'
             ])
-            ->setDatas([
+            ->setData([
                 'data-1' => 'Lorem ipsum',
                 'data-2' => 1234,
                 'data-3' => true
             ])
-            ->setParameters([
+            ->setOptions([
                 'dry_run' => true
             ])
             ->send();

@@ -8,7 +8,7 @@ use Cake\Utility\Hash;
 use ker0x\Push\Adapter\Exception\InvalidAdapterException;
 use ker0x\Push\Adapter\Fcm\Exception\InvalidDataException;
 use ker0x\Push\Adapter\Fcm\Exception\InvalidNotificationException;
-use ker0x\Push\Adapter\Fcm\Exception\InvalidParametersException;
+use ker0x\Push\Adapter\Fcm\Exception\InvalidOptionsException;
 use ker0x\Push\Adapter\Fcm\Exception\InvalidTokenException;
 
 class Fcm
@@ -31,18 +31,18 @@ class Fcm
     protected $notification = [];
 
     /**
-     * Array of datas
+     * Array of data
      *
      * @var array
      */
-    protected $datas = [];
+    protected $data = [];
 
     /**
-     * Array of request parameters
+     * Array of request options
      *
      * @var array
      */
-    protected $parameters = [];
+    protected $options = [];
 
     /**
      * Array of payload
@@ -64,7 +64,7 @@ class Fcm
      * @var array
      */
     protected $_defaultConfig = [
-        'parameters' => [
+        'options' => [
             'collapse_key' => null,
             'priority' => 'normal',
             'dry_run' => false,
@@ -134,7 +134,7 @@ class Fcm
     }
 
     /**
-     * Getter for notification
+     * Getter for payload notification
      *
      * @return array
      */
@@ -144,7 +144,25 @@ class Fcm
     }
 
     /**
-     * Setter for notification
+     * Setter for payload notification
+     *
+     * Authorized keys for the notification are:
+     *
+     * - `title` Indicates notification title.
+     * - `body` Indicates notification body text.
+     * - `badge` Indicates the badge on the client app home icon. (iOS)
+     * - `icon` Indicates notification icon. (Android)
+     * - `sound` Indicates a sound to play when the device receives a notification.
+     * - `tag` Indicates whether each notification results in a new entry in the
+     *   notification drawer on Android. (Android)
+     * - `color` Indicates color of the icon, expressed in #rrggbb format. (Android)
+     * - `click_action` Indicates the action associated with a user click on the notification.
+     * - `body_loc_key` Indicates the key to the body string for localization.
+     * - `body_loc_args` Indicates the string value to replace format specifiers in the
+     *   body string for localization.
+     * - `title_loc_key` Indicates the key to the title string for localization.
+     * - `title_loc_args` Indicates the string value to replace format specifiers in
+     *   the title string for localization.
      *
      * @param array $notification Array of keys for the notification
      * @return $this
@@ -161,55 +179,69 @@ class Fcm
     }
 
     /**
-     * Getter for datas
+     * Getter for payload data
      *
      * @return array
      */
-    public function getDatas()
+    public function getData()
     {
-        return $this->datas;
+        return $this->data;
     }
 
     /**
-     * Setter for datas
+     * Setter for payload data
      *
-     * @param array $datas Array of datas for the push
+     * @param array $data Array of data for the push
      * @return $this
      */
-    public function setDatas(array $datas)
+    public function setData(array $data)
     {
-        $this->_checkDatas($datas);
-        foreach ($datas as $key => $value) {
+        $this->_checkData($data);
+        foreach ($data as $key => $value) {
             if (is_bool($value)) {
                 $value = ($value) ? 'true' : 'false';
             }
-            $datas[$key] = (string)$value;
+            $data[$key] = (string)$value;
         }
-        $this->datas = $datas;
+        $this->data = $data;
 
         return $this;
     }
 
     /**
-     * Getter for parameters
+     * Getter for payload options
      *
      * @return array
      */
-    public function getParameters()
+    public function getOptions()
     {
-        return $this->parameters;
+        return $this->options;
     }
 
     /**
-     * Setter for parameters
+     * Setter for payload options
      *
-     * @param array $parameters Array of parameters for the push
+     * Authorized keys for options are:
+     *
+     * - `collapse_key` This parameter identifies a group of messages.
+     * - `priority` Sets the priority of the message.
+     * - `content_available` When a notification or message is sent and
+     *   this is set to true, an inactive client app is awoken.
+     * - `time_to_live` This parameter specifies how long (in seconds)
+     *   the message should be kept in FCM storage if the device is offline.
+     * - `restricted_package_name` This parameter specifies the package name
+     *   of the application where the registration tokens must match in order
+     *   to receive the message.
+     * - `dry_run` This parameter, when set to true, allows developers to test
+     *   a request without actually sending a message.
+     *
+     * @param array $options Array of options for the push
      * @return $this
      */
-    public function setParameters(array $parameters)
+    public function setOptions(array $options)
     {
-        $this->_checkParameters($parameters);
-        $this->parameters = Hash::merge($this->config('parameters'), $parameters);
+        $this->_checkOptions($options);
+        $this->options = Hash::merge($this->config('options'), $options);
 
         return $this;
     }
@@ -226,9 +258,9 @@ class Fcm
             $this->payload['notification'] = $notification;
         }
 
-        $datas = $this->getDatas();
-        if (!empty($datas)) {
-            $this->payload['datas'] = $datas;
+        $data = $this->getData();
+        if (!empty($data)) {
+            $this->payload['data'] = $data;
         }
 
         return $this->payload;
@@ -275,30 +307,30 @@ class Fcm
     }
 
     /**
-     * Check datas's array
+     * Check data's array
      *
-     * @param array $datas Datas's array
+     * @param array $data Datas's array
      * @return void
      * @throws \ker0x\Push\Adapter\Fcm\Exception\InvalidDataException
      */
-    private function _checkDatas($datas)
+    private function _checkData($data)
     {
-        if (empty($datas)) {
+        if (empty($data)) {
             throw new InvalidDataException("Array can not be empty.");
         }
     }
 
     /**
-     * Check parameters's array
+     * Check options's array
      *
-     * @param array $parameters Parameters's array
+     * @param array $options Options's array
      * @return void
-     * @throws \ker0x\Push\Adapter\Fcm\Exception\InvalidParametersException
+     * @throws \ker0x\Push\Adapter\Fcm\Exception\InvalidOptionsException
      */
-    private function _checkParameters($parameters)
+    private function _checkOptions($options)
     {
-        if (empty($parameters)) {
-            throw new InvalidParametersException("Array can not be empty.");
+        if (empty($options)) {
+            throw new InvalidOptionsException("Array can not be empty.");
         }
     }
 
@@ -333,9 +365,9 @@ class Fcm
             $message += $payload;
         }
 
-        $parameters = $this->getParameters();
-        if (!empty($parameters)) {
-            $message += $parameters;
+        $options = $this->getOptions();
+        if (!empty($options)) {
+            $message += $options;
         }
 
         return json_encode($message);
