@@ -17,7 +17,13 @@ To install this plugin, run ``composer require ker0x/cakephp-push`` or add this 
 Enable plugin
 -------------
 
-You need to enable the plugin in your ``config/bootstrap.php`` file:
+You can load the plugin by typing the following command in a terminal:
+
+.. code:: bash
+
+    bin/cake plugin load ker0x/Push -b
+
+or by adding the following line inside your ``config/bootstrap.php`` file:
 
 .. code:: php
 

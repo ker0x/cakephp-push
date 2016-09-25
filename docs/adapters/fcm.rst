@@ -4,10 +4,15 @@ Firebase Cloud Messaging Adapter
 Introduction
 ------------
 
-First, you have to get an API key. Go to https://console.firebase.google.com/ , create a project then in your project's settings you will see your Web API Key.
+It currently only supports HTTP protocol for :
+
+    - sending a downstream message to one or multiple devices
+
 
 Configuration
 -------------
+
+First, you have to get an API key. Go to https://console.firebase.google.com/ , create a project then in your project's settings you will see your Web API Key.
 
 Update your ``push.php`` config file to set Fcm to the adapters's array:
 
