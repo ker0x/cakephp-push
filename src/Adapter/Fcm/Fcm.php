@@ -6,10 +6,11 @@ use Cake\Core\InstanceConfigTrait;
 use Cake\Http\Client;
 use Cake\Utility\Hash;
 use ker0x\Push\Adapter\Exception\InvalidAdapterException;
-use ker0x\Push\Adapter\Fcm\Exception\InvalidDataException;
-use ker0x\Push\Adapter\Fcm\Exception\InvalidNotificationException;
-use ker0x\Push\Adapter\Fcm\Exception\InvalidOptionsException;
-use ker0x\Push\Adapter\Fcm\Exception\InvalidTokenException;
+use ker0x\Push\Adapter\Fcm\Message\Exception\InvalidDataException;
+use ker0x\Push\Adapter\Fcm\Message\Exception\InvalidNotificationException;
+use ker0x\Push\Adapter\Fcm\Message\Exception\InvalidTokenException;
+use ker0x\Push\Adapter\Fcm\Message\Options;
+use ker0x\Push\Adapter\Fcm\Message\OptionsBuilder;
 
 class Fcm
 {
@@ -105,7 +106,7 @@ class Fcm
         $this->config($config);
 
         if ($this->config('api.key') === null) {
-            throw new InvalidAdapterException("No API key set.");
+            throw InvalidAdapterException::noApiKey();
         }
     }
 
@@ -221,7 +222,7 @@ class Fcm
     /**
      * Setter for payload options
      *
-     * Authorized keys for options are:
+     * Authorized keys for options's array are:
      *
      * - `collapse_key` This parameter identifies a group of messages.
      * - `priority` Sets the priority of the message.
@@ -235,13 +236,12 @@ class Fcm
      * - `dry_run` This parameter, when set to true, allows developers to test
      *   a request without actually sending a message.
      *
-     * @param array $options Array of options for the push
+     * @param array|OptionsBuilder $options Options for the push
      * @return $this
      */
-    public function setOptions(array $options)
+    public function setOptions($options)
     {
-        $this->_checkOptions($options);
-        $this->options = Hash::merge($this->config('options'), $options);
+        $this->options = (new Options($options))->build();
 
         return $this;
     }
@@ -271,7 +271,7 @@ class Fcm
      *
      * @param array $tokens Token's array
      * @return void
-     * @throws \ker0x\Push\Adapter\Fcm\Exception\InvalidTokenException
+     * @throws \ker0x\Push\Adapter\Fcm\Message\Exception\InvalidTokenException
      */
     private function _checkTokens($tokens)
     {
@@ -285,7 +285,7 @@ class Fcm
      *
      * @param array $notification Notification's array
      * @return void
-     * @throws \ker0x\Push\Adapter\Fcm\Exception\InvalidNotificationException
+     * @throws \ker0x\Push\Adapter\Fcm\Message\Exception\InvalidNotificationException
      */
     private function _checkNotification($notification)
     {
@@ -311,7 +311,7 @@ class Fcm
      *
      * @param array $data Datas's array
      * @return void
-     * @throws \ker0x\Push\Adapter\Fcm\Exception\InvalidDataException
+     * @throws \ker0x\Push\Adapter\Fcm\Message\Exception\InvalidDataException
      */
     private function _checkData($data)
     {
@@ -321,41 +321,11 @@ class Fcm
     }
 
     /**
-     * Check options's array
-     *
-     * @param array $options Options's array
-     * @return void
-     * @throws \ker0x\Push\Adapter\Fcm\Exception\InvalidOptionsException
-     */
-    private function _checkOptions($options)
-    {
-        if (empty($options)) {
-            throw new InvalidOptionsException("Array can not be empty.");
-        }
-    }
-
-    /**
-     * Execute the push
-     *
-     * @return bool
-     */
-    protected function _executePush()
-    {
-        $message = $this->_buildMessage();
-        $options = $this->_getHttpOptions();
-
-        $http = new Client();
-        $this->response = $http->post($this->config('api.url'), $message, $options);
-
-        return ($this->response->code === '200') ? true : false;
-    }
-
-    /**
      * Build the message
      *
      * @return string
      */
-    private function _buildMessage()
+    protected function _getMessage()
     {
         $tokens = $this->getTokens();
         $message = (count($tokens) > 1) ? ['registration_ids' => $tokens] : ['to' => current($tokens)];
@@ -378,7 +348,7 @@ class Fcm
      *
      * @return array $options
      */
-    private function _getHttpOptions()
+    protected function _getHttpOptions()
     {
         $options = Hash::merge($this->config('http'), [
             'type' => 'json',

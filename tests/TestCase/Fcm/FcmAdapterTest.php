@@ -1,14 +1,14 @@
 <?php
-namespace ker0x\Push\Test\TestCase;
+namespace ker0x\Push\Test\TestCase\Fcm;
 
 use Cake\Core\Configure;
 use Cake\TestSuite\IntegrationTestCase;
 use ker0x\Push\Adapter\Exception\InvalidAdapterException;
 use ker0x\Push\Adapter\FcmAdapter;
-use ker0x\Push\Adapter\Fcm\Exception\InvalidDataException;
-use ker0x\Push\Adapter\Fcm\Exception\InvalidNotificationException;
-use ker0x\Push\Adapter\Fcm\Exception\InvalidOptionsException;
-use ker0x\Push\Adapter\Fcm\Exception\InvalidTokenException;
+use ker0x\Push\Adapter\Fcm\Message\Exception\InvalidDataException;
+use ker0x\Push\Adapter\Fcm\Message\Exception\InvalidNotificationException;
+use ker0x\Push\Adapter\Fcm\Message\Exception\InvalidOptionsException;
+use ker0x\Push\Adapter\Fcm\Message\Exception\InvalidTokenException;
 
 class FcmAdapterTest extends IntegrationTestCase
 {
@@ -119,11 +119,7 @@ class FcmAdapterTest extends IntegrationTestCase
         $options = $this->adapter->getOptions();
 
         $this->assertEquals([
-            'collapse_key' => null,
-            'priority' => 'normal',
             'dry_run' => true,
-            'time_to_live' => 0,
-            'restricted_package_name' => null
         ], $options);
     }
 
@@ -159,33 +155,6 @@ class FcmAdapterTest extends IntegrationTestCase
         ], $payload);
     }
 
-    public function testSendAndResponse()
-    {
-        Configure::write('Push.adapters.Fcm.api.key', $this->api_key);
-        $adapter = new FcmAdapter();
-        $adapter
-            ->setTokens([$this->token])
-            ->setNotification([
-                'title' => 'Hello World',
-                'body' => 'My awesome Hello World!'
-            ])
-            ->setData([
-                'data-1' => 'Lorem ipsum',
-                'data-2' => 1234,
-                'data-3' => true
-            ])
-            ->setOptions([
-                'dry_run' => true
-            ]);
-
-        $result = $adapter->send();
-        $response = $adapter->response();
-
-        $this->assertTrue($result);
-        $this->assertEquals(1, $response->json['success']);
-        $this->assertEquals(0, $response->json['failure']);
-    }
-
     public function testNoApiKeyAdapter()
     {
         Configure::write('Push.adapters.Fcm.api.key', null);
@@ -204,8 +173,7 @@ class FcmAdapterTest extends IntegrationTestCase
             ])
             ->setOptions([
                 'dry_run' => true
-            ])
-            ->send();
+            ]);
     }
 
     public function tearDown()

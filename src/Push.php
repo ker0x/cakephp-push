@@ -1,6 +1,8 @@
 <?php
 namespace ker0x\Push;
 
+use Cake\Http\Client;
+
 class Push
 {
 
@@ -8,6 +10,8 @@ class Push
      * @var AdapterInterface
      */
     protected $adapter;
+
+    protected $response;
 
     /**
      * Constructor.
@@ -36,7 +40,14 @@ class Push
      */
     public function send()
     {
-        return $this->getAdapter()->send();
+        $url = $this->getAdapter()->getApiUrl();
+        $data = $this->getAdapter()->getHttpData();
+        $options = $this->getAdapter()->getHttpOptions();
+
+        $http = new Client();
+        $this->response = $http->post($url, $data, $options);
+
+        return $this->response->code === '200';
     }
 
     /**
@@ -46,6 +57,6 @@ class Push
      */
     public function response()
     {
-        return $this->getAdapter()->response();
+        return $this->response;
     }
 }
