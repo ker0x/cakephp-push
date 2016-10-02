@@ -4,26 +4,34 @@ namespace ker0x\Push\Adapter;
 use ker0x\Push\AdapterInterface;
 use ker0x\Push\Adapter\Fcm\Fcm;
 
+/**
+ * Class FcmAdapter
+ * @package ker0x\Push\Adapter
+ */
 class FcmAdapter extends Fcm implements AdapterInterface
 {
 
     /**
-     * Send the request
-     *
-     * @return bool
+     * @return string
      */
-    public function send()
+    public function getApiUrl()
     {
-        return $this->_executePush();
+        return $this->config('api.url');
     }
 
     /**
-     * Display the response of the request
-     *
-     * @return \Cake\Http\Client\Response
+     * @return string
      */
-    public function response()
+    public function getHttpData()
     {
-        return $this->response;
+        return $this->_getMessage();
+    }
+
+    /**
+     * @return array
+     */
+    public function getHttpOptions()
+    {
+        return $this->_getHttpOptions();
     }
 }

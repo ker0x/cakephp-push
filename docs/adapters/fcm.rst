@@ -42,24 +42,25 @@ Usage
     $adapter
         ->setTokens($tokens)
         ->setNotification($notification)
-        ->setDatas($datas)
-        ->setParameters($parameters);
+        ->setData($data)
+        ->setOptions($options);
 
 where:
 
     - ``$tokens`` is an array of device's token. (required)
     - ``$notification`` is an array containing the notification. (optional)
-    - ``datas`` is an array with some datas that will be passed. (optional)
-    - ``$paramaters`` is an array of parameters for the notification. (optional)
+    - ``data`` is an array with some data that will be passed. (optional)
+    - ``$options`` is an array of options for the payload. (optional)
 
-Example
--------
+Basic example
+-------------
 
 .. code:: php
 
     use ker0x\Push\Adapter\FcmAdapter;
     use ker0x\Push\Push;
 
+    // Create the adapter from array
     $adapter = new FcmAdapter();
     $adapter
         ->setTokens(['1', '2', '3', '4'])
@@ -67,15 +68,68 @@ Example
             'title' => 'Hello World',
             'body' => 'My awesome Hello World!'
         ])
-        ->setDatas([
+        ->setData([
             'data-1' => 'Lorem ipsum',
             'data-2' => 1234,
             'data-3' => true
         ])
-        ->setParameters([
+        ->setOptions([
             'dry_run' => true
         ]);
 
+    // Create the push
+    $push = new Push($adapter);
+
+    // Make the push
+    $result = $push->send();
+
+    // Get the response
+    $response = $push->response();
+
+Advance example
+---------------
+
+.. code:: php
+
+    use ker0x\Push\Adapter\Fcm\Message\DataBuilder;
+    use ker0x\Push\Adapter\Fcm\Message\NotificationBuilder;
+    use ker0x\Push\Adapter\Fcm\Message\OptionsBuilder;
+    use ker0x\Push\Adapter\FcmAdapter;
+    use ker0x\Push\Push;
+
+    // Build the notification
+    $notificationBuilder = new NotificationBuilder('Hello World');
+    $notificationBuilder
+        ->setBody('My awesome Hello World')
+        ->setColor('#FFFFFF')
+        ->setTag('test')
+
+    // Build the data
+    $dataBuilder = new DataBuilder();
+    $dataBuilder
+        ->addData('data-1', 'data-1')
+        ->addData('data-2', true)
+        ->addData('data-3', 1234);
+
+    // Build the options
+    $optionsBuilder = new OptionsBuilder();
+    $optionsBuilder
+        ->setRestrictedPackageName('foo')
+        ->setCollapseKey('Update available')
+        ->setPriority('normal')
+        ->setTimeToLive(3600)
+        ->setContentAvailable(true)
+        ->setDryRun(true);
+
+    // Create the adapter from builders
+    $adapter = new FcmAdapter();
+    $adapter
+        ->setTokens(['1', '2', '3', '4'])
+        ->setNotification($notificationBuilder)
+        ->setData($dataBuilder)
+        ->setOptions($optionsBuilder);
+
+    // Create the push
     $push = new Push($adapter);
 
     // Make the push

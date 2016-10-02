@@ -1,20 +1,31 @@
 <?php
 namespace ker0x\Push;
 
+/**
+ * Interface AdapterInterface
+ * @package ker0x\Push
+ */
 interface AdapterInterface
 {
 
     /**
-     * Send a downstream message to one or more devices.
+     * Return the url of the API
      *
-     * @return bool
+     * @return string
      */
-    public function send();
+    public function getApiUrl();
 
     /**
-     * Return the response of the push
+     * The data you want to send.
      *
      * @return mixed
      */
-    public function response();
+    public function getHttpData();
+
+    /**
+     * Options for the request.
+     *
+     * @return array
+     */
+    public function getHttpOptions();
 }
