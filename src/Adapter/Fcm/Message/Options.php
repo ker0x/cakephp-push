@@ -7,38 +7,56 @@ use ker0x\Push\Adapter\Fcm\Message\Exception\InvalidOptionsException;
 
 class Options
 {
+
     /**
+     * This parameter identifies a group of messages.
+     *
      * @var null|string
      */
     protected $collapseKey;
 
     /**
+     * Sets the priority of the message.
+     *
      * @var null|string
      */
     protected $priority;
 
     /**
+     * When a notification or message is sent and this is set to true,
+     * an inactive client app is awoken.
+     *
      * @var bool
      */
     protected $contentAvailable = false;
 
     /**
+     * This parameter specifies how long (in seconds) the message should be kept
+     * in FCM storage if the device is offline.
+     *
      * @var null|int
      */
     protected $timeToLive;
 
     /**
+     * This parameter specifies the package name of the application where the registration
+     * tokens must match in order to receive the message.
+     *
      * @var null|string
      */
     protected $restrictedPackageName;
 
     /**
+     * This parameter, when set to true, allows developers to test a request without
+     * actually sending a message.
+     *
      * @var bool
      */
     protected $dryRun = false;
 
     /**
      * Options constructor.
+     *
      * @param array|OptionsBuilder $optionsBuilder
      */
     public function __construct($optionsBuilder)
@@ -56,6 +74,8 @@ class Options
     }
 
     /**
+     * Return the options as an array.
+     *
      * @return array
      */
     public function build()
@@ -73,11 +93,13 @@ class Options
     }
 
     /**
+     * Build options from an array.
+     *
      * @param array $optionsArray
      * @return \ker0x\Push\Adapter\Fcm\Message\OptionsBuilder
      * @throws \ker0x\Push\Adapter\Fcm\Message\Exception\InvalidOptionsException
      */
-    private function fromArray(array $optionsArray): OptionsBuilder
+    private function fromArray(array $optionsArray)
     {
         if (empty($optionsArray)) {
             throw InvalidOptionsException::arrayEmpty();

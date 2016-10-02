@@ -5,19 +5,20 @@ use Exception;
 
 abstract class AbstractException extends Exception
 {
+
     public static function mustBeString($key)
     {
-        return new static("{$key} must be a string.");
+        return new static(sprintf("%s must be a string.", $key));
     }
 
     public static function mustBeBool($key)
     {
-        return new static("{$key} must be a boolean.");
+        return new static(sprintf("%s must be a boolean.", $key));
     }
 
     public static function mustBeInt($key)
     {
-        return new static("{$key} must be a integer.");
+        return new static(sprintf("%s must be an integer.", $key));
     }
 
     public static function arrayEmpty()
