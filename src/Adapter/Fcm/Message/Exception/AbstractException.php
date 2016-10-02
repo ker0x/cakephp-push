@@ -7,9 +7,9 @@ abstract class AbstractException extends Exception
 {
 
     /**
+     * Display if the value must be a string.
      *
-     *
-     * @param string $key
+     * @param string $key The key that is wrong.
      * @return static
      */
     public static function mustBeString($key)
@@ -18,7 +18,9 @@ abstract class AbstractException extends Exception
     }
 
     /**
-     * @param $key
+     * Display if the value must be a bool.
+     *
+     * @param string $key The key that is wrong.
      * @return static
      */
     public static function mustBeBool($key)
@@ -27,7 +29,9 @@ abstract class AbstractException extends Exception
     }
 
     /**
-     * @param $key
+     * Display if the value must be an int.
+     *
+     * @param string $key The key that is wrong.
      * @return static
      */
     public static function mustBeInt($key)
@@ -36,6 +40,8 @@ abstract class AbstractException extends Exception
     }
 
     /**
+     * Display if an array is empty.
+     *
      * @return static
      */
     public static function arrayEmpty()

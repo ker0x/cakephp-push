@@ -14,16 +14,40 @@ class OptionsBuilderTest extends TestCase
         $this->optionBuilder = new OptionsBuilder();
     }
 
-    public function testInvalidTimeToLive()
+    public function testInvalidCollapseKey()
     {
         $this->expectException(InvalidOptionsException::class);
-        $this->optionBuilder->setTimeToLive(2419201);
+        $this->optionBuilder->setCollapseKey(true);
     }
 
     public function testInvalidPriority()
     {
         $this->expectException(InvalidOptionsException::class);
         $this->optionBuilder->setPriority('low');
+    }
+
+    public function testInvalidContentAvailable()
+    {
+        $this->expectException(InvalidOptionsException::class);
+        $this->optionBuilder->setContentAvailable('true');
+    }
+
+    public function testInvalidTimeToLive()
+    {
+        $this->expectException(InvalidOptionsException::class);
+        $this->optionBuilder->setTimeToLive(2419201);
+    }
+
+    public function testInvalidRestrictedPackageName()
+    {
+        $this->expectException(InvalidOptionsException::class);
+        $this->optionBuilder->setRestrictedPackageName(true);
+    }
+
+    public function testInvalidDryRun()
+    {
+        $this->expectException(InvalidOptionsException::class);
+        $this->optionBuilder->setDryRun('true');
     }
 
     public function tearDown()

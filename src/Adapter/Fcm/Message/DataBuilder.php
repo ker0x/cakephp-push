@@ -49,7 +49,7 @@ class DataBuilder
     /**
      * Return all data.
      *
-     * @return array|null
+     * @return array
      */
     public function getAllData()
     {
