@@ -9,7 +9,7 @@ use ker0x\Push\Adapter\Fcm\Message\Exception\InvalidOptionsException;
  */
 class OptionsBuilder
 {
-    
+
     /**
      * Normal priority for the notification.
      */
@@ -214,7 +214,7 @@ class OptionsBuilder
     /**
      * Setter for dryRun.
      *
-     * @param boolean $dryRun Test a request without sending a message if set to `true`.
+     * @param bool $dryRun Test a request without sending a message if set to `true`.
      * @return $this
      * @throws \ker0x\Push\Adapter\Fcm\Message\Exception\InvalidOptionsException
      */
