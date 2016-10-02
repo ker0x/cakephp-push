@@ -1,7 +1,6 @@
 <?php
 namespace ker0x\Push\Adapter\Fcm\Message;
 
-
 use Cake\Utility\Inflector;
 use ker0x\Push\Adapter\Fcm\Message\Exception\InvalidOptionsException;
 
@@ -57,7 +56,7 @@ class Options
     /**
      * Options constructor.
      *
-     * @param array|OptionsBuilder $optionsBuilder
+     * @param array|\ker0x\Push\Adapter\Fcm\Message\OptionsBuilder $optionsBuilder Options for the push.
      */
     public function __construct($optionsBuilder)
     {
@@ -74,7 +73,7 @@ class Options
     }
 
     /**
-     * Return the options as an array.
+     * Return options as an array.
      *
      * @return array
      */
@@ -95,7 +94,7 @@ class Options
     /**
      * Build options from an array.
      *
-     * @param array $optionsArray
+     * @param array $optionsArray Array of options for the push.
      * @return \ker0x\Push\Adapter\Fcm\Message\OptionsBuilder
      * @throws \ker0x\Push\Adapter\Fcm\Message\Exception\InvalidOptionsException
      */

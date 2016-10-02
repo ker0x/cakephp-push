@@ -101,7 +101,7 @@ class Notification
     /**
      * Notification constructor.
      *
-     * @param array|NotificationBuilder $notificationBuilder The notification we want to send
+     * @param array|\ker0x\Push\Adapter\Fcm\Message\NotificationBuilder $notificationBuilder The notification we want to send
      */
     public function __construct($notificationBuilder)
     {
@@ -124,7 +124,7 @@ class Notification
     }
 
     /**
-     * Return the notification as an array.
+     * Return notification as an array.
      *
      * @return array
      */
@@ -151,7 +151,7 @@ class Notification
     /**
      * Build notification from an array
      *
-     * @param array $notificationArray
+     * @param array $notificationArray Array of keys for the notification.
      * @return \ker0x\Push\Adapter\Fcm\Message\NotificationBuilder
      * @throws \ker0x\Push\Adapter\Fcm\Message\Exception\InvalidNotificationException
      */

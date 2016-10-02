@@ -14,7 +14,7 @@ class Data implements BuilderInterface
     /**
      * Data constructor.
      *
-     * @param array|\ker0x\Push\Adapter\Fcm\Message\DataBuilder $dataBuilder
+     * @param array|\ker0x\Push\Adapter\Fcm\Message\DataBuilder $dataBuilder The data we want to send.
      * @throws \ker0x\Push\Adapter\Fcm\Message\Exception\InvalidDataException
      */
     public function __construct($dataBuilder)
@@ -27,9 +27,11 @@ class Data implements BuilderInterface
     }
 
     /**
+     * Return data as an array.
+     *
      * @return array
      */
-    public function build(): array
+    public function build()
     {
         return $this->data;
     }
@@ -37,7 +39,7 @@ class Data implements BuilderInterface
     /**
      * Build data from an array.
      *
-     * @param array $dataArray
+     * @param array $dataArray Array of data for the notification.
      * @return \ker0x\Push\Adapter\Fcm\Message\DataBuilder
      * @throws \ker0x\Push\Adapter\Fcm\Message\Exception\InvalidDataException
      */

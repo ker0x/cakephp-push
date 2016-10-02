@@ -100,7 +100,7 @@ class NotificationBuilder
     /**
      * NotificationBuilder constructor.
      *
-     * @param string $title
+     * @param string $title Notification title.
      */
     public function __construct($title)
     {
@@ -108,6 +108,8 @@ class NotificationBuilder
     }
 
     /**
+     * Getter for title.
+     *
      * @return null|string
      */
     public function getTitle()
@@ -116,6 +118,8 @@ class NotificationBuilder
     }
 
     /**
+     * Getter for body.
+     *
      * @return null|string
      */
     public function getBody()
@@ -124,7 +128,9 @@ class NotificationBuilder
     }
 
     /**
-     * @param string $body
+     * Setter for body.
+     *
+     * @param string $body Notification body text.
      * @return $this
      * @throws \ker0x\Push\Adapter\Fcm\Message\Exception\InvalidNotificationException
      */
@@ -137,6 +143,8 @@ class NotificationBuilder
     }
 
     /**
+     * Getter for sound.
+     *
      * @return null|string
      */
     public function getSound()
@@ -145,7 +153,9 @@ class NotificationBuilder
     }
 
     /**
-     * @param string $sound
+     * Setter for sound.
+     *
+     * @param string $sound Sound to play when the device receives a notification.
      * @return $this
      * @throws \ker0x\Push\Adapter\Fcm\Message\Exception\InvalidNotificationException
      */
@@ -158,6 +168,8 @@ class NotificationBuilder
     }
 
     /**
+     * Getter for badge.
+     *
      * @return null|string
      */
     public function getBadge()
@@ -166,7 +178,9 @@ class NotificationBuilder
     }
 
     /**
-     * @param string $badge
+     * Setter for badge.
+     *
+     * @param string $badge Badge on the client app home icon. (iOS)
      * @return $this
      * @throws \ker0x\Push\Adapter\Fcm\Message\Exception\InvalidNotificationException
      */
@@ -179,6 +193,8 @@ class NotificationBuilder
     }
 
     /**
+     * Getter for icon.
+     *
      * @return null|string
      */
     public function getIcon()
@@ -187,7 +203,9 @@ class NotificationBuilder
     }
 
     /**
-     * @param string $icon
+     * Setter for icon.
+     *
+     * @param string $icon Notification icon. (Android)
      * @return $this
      * @throws \ker0x\Push\Adapter\Fcm\Message\Exception\InvalidNotificationException
      */
@@ -200,6 +218,8 @@ class NotificationBuilder
     }
 
     /**
+     * Getter for tag.
+     *
      * @return null|string
      */
     public function getTag()
@@ -208,7 +228,10 @@ class NotificationBuilder
     }
 
     /**
-     * @param string $tag
+     * Setter for tag.
+     *
+     * @param string $tag Notification results in a new entry in the
+     * notification drawer on Android. (Android)
      * @return $this
      * @throws \ker0x\Push\Adapter\Fcm\Message\Exception\InvalidNotificationException
      */
@@ -221,6 +244,8 @@ class NotificationBuilder
     }
 
     /**
+     * Getter for color.
+     *
      * @return null|string
      */
     public function getColor()
@@ -229,7 +254,9 @@ class NotificationBuilder
     }
 
     /**
-     * @param string $color
+     * Setter for color.
+     *
+     * @param string $color Color of the icon, expressed in #rrggbb format. (Android)
      * @return $this
      * @throws \ker0x\Push\Adapter\Fcm\Message\Exception\InvalidNotificationException
      */
@@ -244,6 +271,8 @@ class NotificationBuilder
     }
 
     /**
+     * Getter for clickAction.
+     *
      * @return null|string
      */
     public function getClickAction()
@@ -252,7 +281,9 @@ class NotificationBuilder
     }
 
     /**
-     * @param string $clickAction
+     * Setter for clickAction
+     *
+     * @param string $clickAction Action associated with a user click on the notification.
      * @return $this
      * @throws \ker0x\Push\Adapter\Fcm\Message\Exception\InvalidNotificationException
      */
@@ -265,6 +296,8 @@ class NotificationBuilder
     }
 
     /**
+     * Getter for bodyLocKey
+     *
      * @return null|string
      */
     public function getBodyLocKey()
@@ -273,7 +306,9 @@ class NotificationBuilder
     }
 
     /**
-     * @param string $bodyLocKey
+     * Setter for bodyLocKey
+     *
+     * @param string $bodyLocKey Key to the body string for localization.
      * @return $this
      * @throws \ker0x\Push\Adapter\Fcm\Message\Exception\InvalidNotificationException
      */
@@ -286,6 +321,8 @@ class NotificationBuilder
     }
 
     /**
+     * Getter for bodyLocArgs.
+     *
      * @return null|string
      */
     public function getBodyLocArgs()
@@ -294,7 +331,10 @@ class NotificationBuilder
     }
 
     /**
-     * @param string $bodyLocArgs
+     * Setter for bodyLocArgs.
+     *
+     * @param string $bodyLocArgs String value to replace format specifiers in the
+     * body string for localization.
      * @return $this
      * @throws \ker0x\Push\Adapter\Fcm\Message\Exception\InvalidNotificationException
      */
@@ -307,6 +347,8 @@ class NotificationBuilder
     }
 
     /**
+     * Getter for titleLocKey.
+     *
      * @return null|string
      */
     public function getTitleLocKey()
@@ -315,7 +357,9 @@ class NotificationBuilder
     }
 
     /**
-     * @param string $titleLocKey
+     * Setter for titleLocKey.
+     *
+     * @param string $titleLocKey Key to the title string for localization.
      * @return $this
      * @throws \ker0x\Push\Adapter\Fcm\Message\Exception\InvalidNotificationException
      */
@@ -328,6 +372,8 @@ class NotificationBuilder
     }
 
     /**
+     * Getter for titleLocArgs
+     *
      * @return null|string
      */
     public function getTitleLocArgs()
@@ -336,7 +382,10 @@ class NotificationBuilder
     }
 
     /**
-     * @param string $titleLocArgs
+     * Setter for titleLocArgs
+     *
+     * @param string $titleLocArgs String value to replace format specifiers in
+     * the title string for localization.
      * @return $this
      * @throws \ker0x\Push\Adapter\Fcm\Message\Exception\InvalidNotificationException
      */

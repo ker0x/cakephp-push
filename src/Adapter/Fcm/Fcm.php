@@ -4,11 +4,11 @@ namespace ker0x\Push\Adapter\Fcm;
 use Cake\Core\Configure;
 use Cake\Core\InstanceConfigTrait;
 use Cake\Utility\Hash;
-use ker0x\Push\Adapter\InvalidAdapterException;
 use ker0x\Push\Adapter\Fcm\Message\Data;
 use ker0x\Push\Adapter\Fcm\Message\Exception\InvalidTokenException;
 use ker0x\Push\Adapter\Fcm\Message\Notification;
 use ker0x\Push\Adapter\Fcm\Message\Options;
+use ker0x\Push\Adapter\InvalidAdapterException;
 
 class Fcm
 {

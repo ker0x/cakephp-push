@@ -16,8 +16,8 @@ class DataBuilder
     /**
      * Setter for data.
      *
-     * @param string $key
-     * @param $value
+     * @param string $key The data key.
+     * @param string|bool|int $value The data value.
      * @return \ker0x\Push\Adapter\Fcm\Message\DataBuilder
      */
     public function addData($key, $value)
@@ -33,7 +33,7 @@ class DataBuilder
     /**
      * Getter for data.
      *
-     * @param string $key
+     * @param string $key The key we want to get.
      * @return mixed
      * @throws \ker0x\Push\Adapter\Fcm\Message\Exception\InvalidDataException
      */
@@ -42,6 +42,7 @@ class DataBuilder
         if (!array_key_exists($key, $this->data)) {
             throw InvalidDataException::invalidKey($key);
         }
+
         return $this->data[$key];
     }
 
@@ -50,7 +51,7 @@ class DataBuilder
      *
      * @return array|null
      */
-    public function getAllData(): array
+    public function getAllData()
     {
         return $this->data;
     }
@@ -58,7 +59,7 @@ class DataBuilder
     /**
      * Remove the data with the key $key.
      *
-     * @param string $key
+     * @param string $key The key we want to remove.
      * @return \ker0x\Push\Adapter\Fcm\Message\DataBuilder
      */
     public function removeData($key)
