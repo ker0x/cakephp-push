@@ -3,14 +3,12 @@ namespace ker0x\Push\Adapter\Fcm;
 
 use Cake\Core\Configure;
 use Cake\Core\InstanceConfigTrait;
-use Cake\Http\Client;
 use Cake\Utility\Hash;
-use ker0x\Push\Adapter\Exception\InvalidAdapterException;
-use ker0x\Push\Adapter\Fcm\Message\Exception\InvalidDataException;
-use ker0x\Push\Adapter\Fcm\Message\Exception\InvalidNotificationException;
+use ker0x\Push\Adapter\Fcm\Message\Data;
 use ker0x\Push\Adapter\Fcm\Message\Exception\InvalidTokenException;
+use ker0x\Push\Adapter\Fcm\Message\Notification;
 use ker0x\Push\Adapter\Fcm\Message\Options;
-use ker0x\Push\Adapter\Fcm\Message\OptionsBuilder;
+use ker0x\Push\Adapter\InvalidAdapterException;
 
 class Fcm
 {
@@ -70,9 +68,9 @@ class Fcm
             'priority' => 'normal',
             'dry_run' => false,
             'time_to_live' => 0,
-            'restricted_package_name' => null
+            'restricted_package_name' => null,
         ],
-        'http' => []
+        'http' => [],
     ];
 
     /**
@@ -165,16 +163,12 @@ class Fcm
      * - `title_loc_args` Indicates the string value to replace format specifiers in
      *   the title string for localization.
      *
-     * @param array $notification Array of keys for the notification
+     * @param array|\ker0x\Push\Adapter\Fcm\Message\NotificationBuilder $notification Array of keys for the notification
      * @return $this
      */
-    public function setNotification(array $notification)
+    public function setNotification($notification)
     {
-        $this->_checkNotification($notification);
-        if (!isset($notification['icon'])) {
-            $notification['icon'] = 'myicon';
-        }
-        $this->notification = $notification;
+        $this->notification = (new Notification($notification))->build();
 
         return $this;
     }
@@ -195,16 +189,9 @@ class Fcm
      * @param array $data Array of data for the push
      * @return $this
      */
-    public function setData(array $data)
+    public function setData($data)
     {
-        $this->_checkData($data);
-        foreach ($data as $key => $value) {
-            if (is_bool($value)) {
-                $value = ($value) ? 'true' : 'false';
-            }
-            $data[$key] = (string)$value;
-        }
-        $this->data = $data;
+        $this->data = (new Data($data))->build();
 
         return $this;
     }
@@ -236,7 +223,7 @@ class Fcm
      * - `dry_run` This parameter, when set to true, allows developers to test
      *   a request without actually sending a message.
      *
-     * @param array|OptionsBuilder $options Options for the push
+     * @param array|\ker0x\Push\Adapter\Fcm\Message\OptionsBuilder $options Options for the push
      * @return $this
      */
     public function setOptions($options)
@@ -281,46 +268,6 @@ class Fcm
     }
 
     /**
-     * Check notification's array
-     *
-     * @param array $notification Notification's array
-     * @return void
-     * @throws \ker0x\Push\Adapter\Fcm\Message\Exception\InvalidNotificationException
-     */
-    private function _checkNotification($notification)
-    {
-        if (empty($notification) || !isset($notification['title'])) {
-            throw new InvalidNotificationException("Array must contain at least a key title.");
-        }
-
-        $notAllowedKeys = [];
-        foreach ($notification as $key => $value) {
-            if (!in_array($key, $this->_allowedNotificationKeys)) {
-                $notAllowedKeys[] = $key;
-            }
-        }
-
-        if (!empty($notAllowedKeys)) {
-            $notAllowedKeys = implode(', ', $notAllowedKeys);
-            throw new InvalidNotificationException("The following keys are not allowed: {$notAllowedKeys}");
-        }
-    }
-
-    /**
-     * Check data's array
-     *
-     * @param array $data Datas's array
-     * @return void
-     * @throws \ker0x\Push\Adapter\Fcm\Message\Exception\InvalidDataException
-     */
-    private function _checkData($data)
-    {
-        if (empty($data)) {
-            throw new InvalidDataException("Array can not be empty.");
-        }
-    }
-
-    /**
      * Build the message
      *
      * @return string
@@ -354,8 +301,8 @@ class Fcm
             'type' => 'json',
             'headers' => [
                 'Authorization' => 'key=' . $this->config('api.key'),
-                'Content-Type' => 'application/json'
-            ]
+                'Content-Type' => 'application/json',
+            ],
         ]);
 
         return $options;

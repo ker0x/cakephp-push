@@ -12,68 +12,96 @@ class Notification
 {
 
     /**
+     * Indicates notification title.
+     *
      * @var null|string
      */
     protected $title;
 
     /**
+     * Indicates notification body text.
+     *
      * @var null|string
      */
     protected $body;
 
     /**
+     * Indicates a sound to play when the device receives a notification.
+     *
      * @var null|string
      */
     protected $sound;
 
     /**
+     * Indicates the badge on the client app home icon. (iOS)
+     *
      * @var null|string
      */
     protected $badge;
 
     /**
+     * Indicates notification icon. (Android)
+     *
      * @var null|string
      */
     protected $icon;
 
     /**
+     * Indicates whether each notification results in a new entry in the
+     * notification drawer on Android. (Android)
+     *
      * @var null|string
      */
     protected $tag;
 
     /**
+     * Indicates color of the icon, expressed in #rrggbb format. (Android)
+     *
      * @var null|string
      */
     protected $color;
 
     /**
+     * Indicates the action associated with a user click on the notification.
+     *
      * @var null|string
      */
     protected $clickAction;
 
     /**
+     * Indicates the key to the body string for localization.
+     *
      * @var null|string
      */
-    protected $bodyLocalizationKey;
+    protected $bodyLocKey;
 
     /**
+     * Indicates the string value to replace format specifiers in the
+     * body string for localization.
+     *
      * @var null|string
      */
-    protected $bodyLocalizationArgs;
+    protected $bodyLocArgs;
 
     /**
+     * Indicates the key to the title string for localization.
+     *
      * @var null|string
      */
-    protected $titleLocalizationKey;
+    protected $titleLocKey;
 
     /**
+     * Indicates the string value to replace format specifiers in
+     * the title string for localization.
+     *
      * @var null|string
      */
-    protected $titleLocalizationArgs;
+    protected $titleLocArgs;
 
     /**
      * Notification constructor.
-     * @param array|NotificationBuilder $notificationBuilder
+     *
+     * @param array|\ker0x\Push\Adapter\Fcm\Message\NotificationBuilder $notificationBuilder The notification we want to send
      */
     public function __construct($notificationBuilder)
     {
@@ -89,13 +117,15 @@ class Notification
         $this->tag = $notificationBuilder->getTag();
         $this->color = $notificationBuilder->getColor();
         $this->clickAction = $notificationBuilder->getClickAction();
-        $this->bodyLocalizationKey = $notificationBuilder->getBodyLocalizationKey();
-        $this->bodyLocalizationArgs = $notificationBuilder->getBodyLocalizationArgs();
-        $this->titleLocalizationKey = $notificationBuilder->getTitleLocalizationKey();
-        $this->titleLocalizationArgs = $notificationBuilder->getTitleLocalizationArgs();
+        $this->bodyLocKey = $notificationBuilder->getBodyLocKey();
+        $this->bodyLocArgs = $notificationBuilder->getBodyLocArgs();
+        $this->titleLocKey = $notificationBuilder->getTitleLocKey();
+        $this->titleLocArgs = $notificationBuilder->getTitleLocArgs();
     }
 
     /**
+     * Return notification as an array.
+     *
      * @return array
      */
     public function build()
@@ -109,24 +139,30 @@ class Notification
             'tag' => $this->tag,
             'color' => $this->color,
             'click_action' => $this->clickAction,
-            'body_loc_key' => $this->bodyLocalizationKey,
-            'body_loc_args' => $this->bodyLocalizationArgs,
-            'title_loc_key' => $this->titleLocalizationKey,
-            'title_loc_args' => $this->titleLocalizationArgs,
+            'body_loc_key' => $this->bodyLocKey,
+            'body_loc_args' => $this->bodyLocArgs,
+            'title_loc_key' => $this->titleLocKey,
+            'title_loc_args' => $this->titleLocArgs,
         ];
 
         return array_filter($notification);
     }
 
     /**
-     * @param array $notificationArray
+     * Build notification from an array
+     *
+     * @param array $notificationArray Array of keys for the notification.
      * @return \ker0x\Push\Adapter\Fcm\Message\NotificationBuilder
      * @throws \ker0x\Push\Adapter\Fcm\Message\Exception\InvalidNotificationException
      */
-    private function fromArray(array $notificationArray): NotificationBuilder
+    private function fromArray(array $notificationArray)
     {
         if (empty($notificationArray)) {
             throw InvalidNotificationException::arrayEmpty();
+        }
+
+        if (!isset($notificationArray['title'])) {
+            throw InvalidNotificationException::invalidArray();
         }
 
         $notificationBuilder = new NotificationBuilder($notificationArray['title']);

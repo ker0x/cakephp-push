@@ -1,11 +1,12 @@
 <?php
 namespace ker0x\Push\Test\TestCase\Fcm;
 
-use Cake\TestSuite\IntegrationTestCase;
+use Cake\TestSuite\TestCase;
+use ker0x\Push\Adapter\Fcm\Message\Exception\InvalidOptionsException;
 use ker0x\Push\Adapter\Fcm\Message\Options;
 use ker0x\Push\Adapter\Fcm\Message\OptionsBuilder;
 
-class OptionsTest extends IntegrationTestCase
+class OptionsTest extends TestCase
 {
     public function testOptionsFromOptionsBuilder()
     {
@@ -51,5 +52,11 @@ class OptionsTest extends IntegrationTestCase
             'restricted_package_name' => 'foo',
             'time_to_live' => 3600,
         ], $options);
+    }
+
+    public function testOptionsFromEmptyArray()
+    {
+        $this->expectException(InvalidOptionsException::class);
+        new Options([]);
     }
 }

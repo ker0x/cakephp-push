@@ -11,36 +11,64 @@ class OptionsBuilder
 {
 
     /**
+     * Normal priority for the notification.
+     */
+    const NORMAL = 'normal';
+
+    /**
+     * High priority for the notification.
+     */
+    const HIGH = 'high';
+
+    /**
+     * This parameter identifies a group of messages.
+     *
      * @var null|string
      */
     protected $collapseKey;
 
     /**
+     * Sets the priority of the message.
+     *
      * @var null|string
      */
     protected $priority;
 
     /**
+     * When a notification or message is sent and this is set to true,
+     * an inactive client app is awoken.
+     *
      * @var bool
      */
     protected $contentAvailable = false;
 
     /**
+     * This parameter specifies how long (in seconds) the message should be kept
+     * in FCM storage if the device is offline.
+     *
      * @var null|int
      */
     protected $timeToLive;
 
     /**
+     * This parameter specifies the package name of the application where the registration
+     * tokens must match in order to receive the message.
+     *
      * @var null|string
      */
     protected $restrictedPackageName;
 
     /**
+     * This parameter, when set to true, allows developers to test a request without
+     * actually sending a message.
+     *
      * @var bool
      */
     protected $dryRun = false;
 
     /**
+     * Getter for collapseKey.
+     *
      * @return string
      */
     public function getCollapseKey()
@@ -49,7 +77,9 @@ class OptionsBuilder
     }
 
     /**
-     * @param string $collapseKey
+     * Setter for collapseKey.
+     *
+     * @param string $collapseKey Identifier for a group of messages.
      * @return $this
      * @throws \ker0x\Push\Adapter\Fcm\Message\Exception\InvalidOptionsException
      */
@@ -64,6 +94,8 @@ class OptionsBuilder
     }
 
     /**
+     * Getter for priority.
+     *
      * @return string
      */
     public function getPriority()
@@ -72,18 +104,26 @@ class OptionsBuilder
     }
 
     /**
-     * @param string $priority
+     * Setter for priority.
+     *
+     * @param string $priority Priority of the message.
      * @return $this
+     * @throws \ker0x\Push\Adapter\Fcm\Message\Exception\InvalidOptionsException
      */
     public function setPriority($priority)
     {
+        if (!in_array($priority, [self::NORMAL, self::HIGH])) {
+            throw InvalidOptionsException::invalidPriority();
+        }
         $this->priority = $priority;
 
         return $this;
     }
 
     /**
-     * @return boolean
+     * Getter for contentAvailable.
+     *
+     * @return bool
      */
     public function isContentAvailable()
     {
@@ -91,7 +131,9 @@ class OptionsBuilder
     }
 
     /**
-     * @param boolean $contentAvailable
+     * Setter for contentAvailable.
+     *
+     * @param bool $contentAvailable Awake an inactive client app if set to `true`.
      * @return $this
      * @throws \ker0x\Push\Adapter\Fcm\Message\Exception\InvalidOptionsException
      */
@@ -106,6 +148,8 @@ class OptionsBuilder
     }
 
     /**
+     * Getter for timeToLive.
+     *
      * @return string
      */
     public function getTimeToLive()
@@ -114,14 +158,16 @@ class OptionsBuilder
     }
 
     /**
-     * @param int $timeToLive
+     * Setter for timeToLive.
+     *
+     * @param int $timeToLive How long (in seconds) the message should be kept in FCM storage.
      * @return $this
      * @throws \ker0x\Push\Adapter\Fcm\Message\Exception\InvalidOptionsException
      */
     public function setTimeToLive($timeToLive)
     {
         if (!is_int($timeToLive) || $timeToLive < 0 || $timeToLive > 2419200) {
-            throw InvalidOptionsException::invalidTTL($timeToLive);
+            throw InvalidOptionsException::invalidTimeToLive($timeToLive);
         }
         $this->timeToLive = $timeToLive;
 
@@ -129,6 +175,8 @@ class OptionsBuilder
     }
 
     /**
+     * Getter for restrictedPackageName.
+     *
      * @return string
      */
     public function getRestrictedPackageName()
@@ -137,7 +185,9 @@ class OptionsBuilder
     }
 
     /**
-     * @param string $restrictedPackageName
+     * Setter for restrictedPackageName.
+     *
+     * @param string $restrictedPackageName Package name of the application.
      * @return $this
      * @throws \ker0x\Push\Adapter\Fcm\Message\Exception\InvalidOptionsException
      */
@@ -152,7 +202,9 @@ class OptionsBuilder
     }
 
     /**
-     * @return boolean
+     * Getter for dryRun.
+     *
+     * @return bool
      */
     public function isDryRun()
     {
@@ -160,7 +212,9 @@ class OptionsBuilder
     }
 
     /**
-     * @param boolean $dryRun
+     * Setter for dryRun.
+     *
+     * @param bool $dryRun Test a request without sending a message if set to `true`.
      * @return $this
      * @throws \ker0x\Push\Adapter\Fcm\Message\Exception\InvalidOptionsException
      */

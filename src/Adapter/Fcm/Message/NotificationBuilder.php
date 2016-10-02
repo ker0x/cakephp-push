@@ -1,6 +1,7 @@
 <?php
 namespace ker0x\Push\Adapter\Fcm\Message;
 
+use ker0x\Push\Adapter\Fcm\Message\Exception\InvalidNotificationException;
 
 /**
  * Class NotificationBuilder
@@ -10,68 +11,96 @@ class NotificationBuilder
 {
 
     /**
+     * Indicates notification title.
+     *
      * @var null|string
      */
     protected $title;
 
     /**
+     * Indicates notification body text.
+     *
      * @var null|string
      */
     protected $body;
 
     /**
+     * Indicates a sound to play when the device receives a notification.
+     *
      * @var null|string
      */
     protected $sound;
 
     /**
+     * Indicates the badge on the client app home icon. (iOS)
+     *
      * @var null|string
      */
     protected $badge;
 
     /**
+     * Indicates notification icon. (Android)
+     *
      * @var null|string
      */
     protected $icon;
 
     /**
+     * Indicates whether each notification results in a new entry in the
+     * notification drawer on Android. (Android)
+     *
      * @var null|string
      */
     protected $tag;
 
     /**
+     * Indicates color of the icon, expressed in #rrggbb format. (Android)
+     *
      * @var null|string
      */
     protected $color;
 
     /**
+     * Indicates the action associated with a user click on the notification.
+     *
      * @var null|string
      */
     protected $clickAction;
 
     /**
+     * Indicates the key to the body string for localization.
+     *
      * @var null|string
      */
-    protected $bodyLocalizationKey;
+    protected $bodyLocKey;
 
     /**
+     * Indicates the string value to replace format specifiers in the
+     * body string for localization.
+     *
      * @var null|string
      */
-    protected $bodyLocalizationArgs;
+    protected $bodyLocArgs;
 
     /**
+     * Indicates the key to the title string for localization.
+     *
      * @var null|string
      */
-    protected $titleLocalizationKey;
+    protected $titleLocKey;
 
     /**
+     * Indicates the string value to replace format specifiers in
+     * the title string for localization.
+     *
      * @var null|string
      */
-    protected $titleLocalizationArgs;
+    protected $titleLocArgs;
 
     /**
      * NotificationBuilder constructor.
-     * @param string $title
+     *
+     * @param string $title Notification title.
      */
     public function __construct($title)
     {
@@ -79,6 +108,8 @@ class NotificationBuilder
     }
 
     /**
+     * Getter for title.
+     *
      * @return null|string
      */
     public function getTitle()
@@ -87,6 +118,8 @@ class NotificationBuilder
     }
 
     /**
+     * Getter for body.
+     *
      * @return null|string
      */
     public function getBody()
@@ -95,17 +128,23 @@ class NotificationBuilder
     }
 
     /**
-     * @param null|string $body
+     * Setter for body.
+     *
+     * @param string $body Notification body text.
      * @return $this
+     * @throws \ker0x\Push\Adapter\Fcm\Message\Exception\InvalidNotificationException
      */
     public function setBody($body)
     {
+        $this->isString($body, 'body');
         $this->body = $body;
 
         return $this;
     }
 
     /**
+     * Getter for sound.
+     *
      * @return null|string
      */
     public function getSound()
@@ -114,17 +153,23 @@ class NotificationBuilder
     }
 
     /**
-     * @param null|string $sound
+     * Setter for sound.
+     *
+     * @param string $sound Sound to play when the device receives a notification.
      * @return $this
+     * @throws \ker0x\Push\Adapter\Fcm\Message\Exception\InvalidNotificationException
      */
     public function setSound($sound)
     {
+        $this->isString($sound, 'sound');
         $this->sound = $sound;
 
         return $this;
     }
 
     /**
+     * Getter for badge.
+     *
      * @return null|string
      */
     public function getBadge()
@@ -133,17 +178,23 @@ class NotificationBuilder
     }
 
     /**
-     * @param null|string $badge
+     * Setter for badge.
+     *
+     * @param string $badge Badge on the client app home icon. (iOS)
      * @return $this
+     * @throws \ker0x\Push\Adapter\Fcm\Message\Exception\InvalidNotificationException
      */
     public function setBadge($badge)
     {
+        $this->isString($badge, 'badge');
         $this->badge = $badge;
 
         return $this;
     }
 
     /**
+     * Getter for icon.
+     *
      * @return null|string
      */
     public function getIcon()
@@ -152,17 +203,23 @@ class NotificationBuilder
     }
 
     /**
-     * @param null|string $icon
+     * Setter for icon.
+     *
+     * @param string $icon Notification icon. (Android)
      * @return $this
+     * @throws \ker0x\Push\Adapter\Fcm\Message\Exception\InvalidNotificationException
      */
     public function setIcon($icon)
     {
+        $this->isString($icon, 'icon');
         $this->icon = $icon;
 
         return $this;
     }
 
     /**
+     * Getter for tag.
+     *
      * @return null|string
      */
     public function getTag()
@@ -171,17 +228,24 @@ class NotificationBuilder
     }
 
     /**
-     * @param null|string $tag
+     * Setter for tag.
+     *
+     * @param string $tag Notification results in a new entry in the
+     * notification drawer on Android. (Android)
      * @return $this
+     * @throws \ker0x\Push\Adapter\Fcm\Message\Exception\InvalidNotificationException
      */
     public function setTag($tag)
     {
+        $this->isString($tag, 'tag');
         $this->tag = $tag;
 
         return $this;
     }
 
     /**
+     * Getter for color.
+     *
      * @return null|string
      */
     public function getColor()
@@ -190,17 +254,25 @@ class NotificationBuilder
     }
 
     /**
-     * @param null|string $color
+     * Setter for color.
+     *
+     * @param string $color Color of the icon, expressed in #rrggbb format. (Android)
      * @return $this
+     * @throws \ker0x\Push\Adapter\Fcm\Message\Exception\InvalidNotificationException
      */
     public function setColor($color)
     {
+        if (!preg_match('/^#[A-Fa-f0-9]{6}$/', $color)) {
+            throw InvalidNotificationException::invalidColor();
+        }
         $this->color = $color;
 
         return $this;
     }
 
     /**
+     * Getter for clickAction.
+     *
      * @return null|string
      */
     public function getClickAction()
@@ -209,89 +281,134 @@ class NotificationBuilder
     }
 
     /**
-     * @param null|string $clickAction
+     * Setter for clickAction
+     *
+     * @param string $clickAction Action associated with a user click on the notification.
      * @return $this
+     * @throws \ker0x\Push\Adapter\Fcm\Message\Exception\InvalidNotificationException
      */
     public function setClickAction($clickAction)
     {
+        $this->isString($clickAction, 'click_action');
         $this->clickAction = $clickAction;
 
         return $this;
     }
 
     /**
+     * Getter for bodyLocKey
+     *
      * @return null|string
      */
-    public function getBodyLocalizationKey()
+    public function getBodyLocKey()
     {
-        return $this->bodyLocalizationKey;
+        return $this->bodyLocKey;
     }
 
     /**
-     * @param null|string $bodyLocalizationKey
+     * Setter for bodyLocKey
+     *
+     * @param string $bodyLocKey Key to the body string for localization.
      * @return $this
+     * @throws \ker0x\Push\Adapter\Fcm\Message\Exception\InvalidNotificationException
      */
-    public function setBodyLocalizationKey($bodyLocalizationKey)
+    public function setBodyLocKey($bodyLocKey)
     {
-        $this->bodyLocalizationKey = $bodyLocalizationKey;
+        $this->isString($bodyLocKey, 'body_loc_key');
+        $this->bodyLocKey = $bodyLocKey;
 
         return $this;
     }
 
     /**
+     * Getter for bodyLocArgs.
+     *
      * @return null|string
      */
-    public function getBodyLocalizationArgs()
+    public function getBodyLocArgs()
     {
-        return $this->bodyLocalizationArgs;
+        return $this->bodyLocArgs;
     }
 
     /**
-     * @param null|string $bodyLocalizationArgs
+     * Setter for bodyLocArgs.
+     *
+     * @param string $bodyLocArgs String value to replace format specifiers in the
+     * body string for localization.
      * @return $this
+     * @throws \ker0x\Push\Adapter\Fcm\Message\Exception\InvalidNotificationException
      */
-    public function setBodyLocalizationArgs($bodyLocalizationArgs)
+    public function setBodyLocArgs($bodyLocArgs)
     {
-        $this->bodyLocalizationArgs = $bodyLocalizationArgs;
+        $this->isString($bodyLocArgs, 'body_loc_args');
+        $this->bodyLocArgs = $bodyLocArgs;
 
         return $this;
     }
 
     /**
+     * Getter for titleLocKey.
+     *
      * @return null|string
      */
-    public function getTitleLocalizationKey()
+    public function getTitleLocKey()
     {
-        return $this->titleLocalizationKey;
+        return $this->titleLocKey;
     }
 
     /**
-     * @param null|string $titleLocalizationKey
+     * Setter for titleLocKey.
+     *
+     * @param string $titleLocKey Key to the title string for localization.
      * @return $this
+     * @throws \ker0x\Push\Adapter\Fcm\Message\Exception\InvalidNotificationException
      */
-    public function setTitleLocalizationKey($titleLocalizationKey)
+    public function setTitleLocKey($titleLocKey)
     {
-        $this->titleLocalizationKey = $titleLocalizationKey;
+        $this->isString($titleLocKey, 'title_loc_key');
+        $this->titleLocKey = $titleLocKey;
 
         return $this;
     }
 
     /**
+     * Getter for titleLocArgs
+     *
      * @return null|string
      */
-    public function getTitleLocalizationArgs()
+    public function getTitleLocArgs()
     {
-        return $this->titleLocalizationArgs;
+        return $this->titleLocArgs;
     }
 
     /**
-     * @param null|string $titleLocalizationArgs
+     * Setter for titleLocArgs
+     *
+     * @param string $titleLocArgs String value to replace format specifiers in
+     * the title string for localization.
      * @return $this
+     * @throws \ker0x\Push\Adapter\Fcm\Message\Exception\InvalidNotificationException
      */
-    public function setTitleLocalizationArgs($titleLocalizationArgs)
+    public function setTitleLocArgs($titleLocArgs)
     {
-        $this->titleLocalizationArgs = $titleLocalizationArgs;
+        $this->isString($titleLocArgs, 'title_loc_args');
+        $this->titleLocArgs = $titleLocArgs;
 
         return $this;
+    }
+
+    /**
+     * Test if $value is a string.
+     *
+     * @param string $value The value to test.
+     * @param string $key The key of the value.
+     * @return void
+     * @throws \ker0x\Push\Adapter\Fcm\Message\Exception\InvalidNotificationException
+     */
+    private function isString($value, $key)
+    {
+        if (!is_string($value)) {
+            throw InvalidNotificationException::mustBeString($key);
+        }
     }
 }
