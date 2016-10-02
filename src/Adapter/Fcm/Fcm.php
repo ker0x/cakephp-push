@@ -74,29 +74,9 @@ class Fcm
     ];
 
     /**
-     * List of keys allowed to be used in notification array.
-     *
-     * @var array
-     */
-    protected $_allowedNotificationKeys = [
-        'title',
-        'body',
-        'icon',
-        'sound',
-        'badge',
-        'tag',
-        'color',
-        'click_action',
-        'body_loc_key',
-        'body_loc_args',
-        'title_loc_key',
-        'title_loc_args',
-    ];
-
-    /**
      * FcmAdapter constructor.
      *
-     * @throws \ker0x\Push\Adapter\Exception\InvalidAdapterException
+     * @throws \ker0x\Push\Adapter\InvalidAdapterException
      */
     public function __construct()
     {
@@ -109,7 +89,7 @@ class Fcm
     }
 
     /**
-     * Getter for tokens
+     * Getter for tokens.
      *
      * @return array
      */
@@ -119,9 +99,9 @@ class Fcm
     }
 
     /**
-     * Setter for tokens
+     * Setter for tokens.
      *
-     * @param array $tokens Array of devices's token
+     * @param array $tokens Array of tokens.
      * @return $this
      */
     public function setTokens(array $tokens)
@@ -133,7 +113,7 @@ class Fcm
     }
 
     /**
-     * Getter for payload notification
+     * Getter for payload notification.
      *
      * @return array
      */
@@ -143,7 +123,7 @@ class Fcm
     }
 
     /**
-     * Setter for payload notification
+     * Setter for payload notification.
      *
      * Authorized keys for the notification are:
      *
@@ -174,7 +154,7 @@ class Fcm
     }
 
     /**
-     * Getter for payload data
+     * Getter for payload data.
      *
      * @return array
      */
@@ -184,9 +164,9 @@ class Fcm
     }
 
     /**
-     * Setter for payload data
+     * Setter for payload data.
      *
-     * @param array $data Array of data for the push
+     * @param array $data Array of data for the push.
      * @return $this
      */
     public function setData($data)
@@ -207,7 +187,7 @@ class Fcm
     }
 
     /**
-     * Setter for payload options
+     * Setter for payload options.
      *
      * Authorized keys for options's array are:
      *
@@ -234,7 +214,7 @@ class Fcm
     }
 
     /**
-     * Getter for payload
+     * Getter for payload.
      *
      * @return array
      */
@@ -254,9 +234,9 @@ class Fcm
     }
 
     /**
-     * Check tokens's array
+     * Check tokens's array.
      *
-     * @param array $tokens Token's array
+     * @param array $tokens An array of tokens.
      * @return void
      * @throws \ker0x\Push\Adapter\Fcm\Message\Exception\InvalidTokenException
      */
@@ -268,7 +248,7 @@ class Fcm
     }
 
     /**
-     * Build the message
+     * Build the message.
      *
      * @return string
      */
@@ -291,7 +271,7 @@ class Fcm
     }
 
     /**
-     * Return options for the HTTP request
+     * Return options for the HTTP request.
      *
      * @return array $options
      */
