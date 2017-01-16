@@ -228,7 +228,7 @@ class Fcm
 
         $datas = $this->getDatas();
         if (!empty($datas)) {
-            $this->payload['datas'] = $datas;
+            $this->payload['data'] = $datas;
         }
 
         return $this->payload;
