@@ -315,7 +315,7 @@ class Fcm
         $http = new Client();
         $this->response = $http->post($this->config('api.url'), $message, $options);
 
-        return ($this->response->code === '200') ? true : false;
+        return $this->response->code === 200;
     }
 
     /**
