@@ -5,7 +5,6 @@
     "homepage": "https://github.com/ker0x/cakephp-push",
     "keywords": ["cakephp", "push", "notification", "fcm"],
     "license": "MIT",
-    "version": "1.0.1",
     "authors": [
         {
             "name": "Romain Monteil",
