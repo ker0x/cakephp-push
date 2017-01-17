@@ -150,7 +150,7 @@ class FcmAdapterTest extends IntegrationTestCase
                 'title' => 'Hello world',
                 'icon' => 'myicon',
             ],
-            'datas' => [
+            'data' => [
                 'data-1' => 'Lorem ipsum',
                 'data-2' => '1234',
                 'data-3' => 'true',
