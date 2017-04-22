@@ -1,4 +1,5 @@
 <?php
+
 namespace ker0x\Push;
 
 class Push
