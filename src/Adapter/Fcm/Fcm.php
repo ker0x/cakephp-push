@@ -1,4 +1,5 @@
 <?php
+
 namespace ker0x\Push\Adapter\Fcm;
 
 use Cake\Core\Configure;
@@ -69,9 +70,9 @@ class Fcm
             'priority' => 'normal',
             'dry_run' => false,
             'time_to_live' => 0,
-            'restricted_package_name' => null
+            'restricted_package_name' => null,
         ],
-        'http' => []
+        'http' => [],
     ];
 
     /**
@@ -102,9 +103,9 @@ class Fcm
     public function __construct()
     {
         $config = Configure::read('Push.adapters.Fcm');
-        $this->config($config);
+        $this->setConfig($config);
 
-        if ($this->config('api.key') === null) {
+        if ($this->getConfig('api.key') === null) {
             throw new InvalidAdapterException("No API key set.");
         }
     }
@@ -241,7 +242,7 @@ class Fcm
      * @return void
      * @throws \ker0x\Push\Adapter\Fcm\Exception\InvalidTokenException
      */
-    private function _checkTokens($tokens)
+    private function _checkTokens(array $tokens)
     {
         if (empty($tokens) || count($tokens) > 1000) {
             throw new InvalidTokenException("Array must contain at least 1 and at most 1000 tokens.");
@@ -255,7 +256,7 @@ class Fcm
      * @return void
      * @throws \ker0x\Push\Adapter\Fcm\Exception\InvalidNotificationException
      */
-    private function _checkNotification($notification)
+    private function _checkNotification(array $notification)
     {
         if (empty($notification) || !isset($notification['title'])) {
             throw new InvalidNotificationException("Array must contain at least a key title.");
@@ -281,7 +282,7 @@ class Fcm
      * @return void
      * @throws \ker0x\Push\Adapter\Fcm\Exception\InvalidDataException
      */
-    private function _checkDatas($datas)
+    private function _checkDatas(array $datas)
     {
         if (empty($datas)) {
             throw new InvalidDataException("Array can not be empty.");
@@ -295,7 +296,7 @@ class Fcm
      * @return void
      * @throws \ker0x\Push\Adapter\Fcm\Exception\InvalidParametersException
      */
-    private function _checkParameters($parameters)
+    private function _checkParameters(array $parameters)
     {
         if (empty($parameters)) {
             throw new InvalidParametersException("Array can not be empty.");
@@ -348,12 +349,12 @@ class Fcm
      */
     private function _getHttpOptions()
     {
-        $options = Hash::merge($this->config('http'), [
+        $options = Hash::merge($this->getConfig('http'), [
             'type' => 'json',
             'headers' => [
-                'Authorization' => 'key=' . $this->config('api.key'),
-                'Content-Type' => 'application/json'
-            ]
+                'Authorization' => 'key=' . $this->getConfig('api.key'),
+                'Content-Type' => 'application/json',
+            ],
         ]);
 
         return $options;
