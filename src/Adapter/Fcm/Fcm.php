@@ -5,6 +5,7 @@ namespace ker0x\Push\Adapter\Fcm;
 use Cake\Core\Configure;
 use Cake\Core\InstanceConfigTrait;
 use Cake\Http\Client;
+use Cake\Http\Client\Message;
 use Cake\Utility\Hash;
 use ker0x\Push\Adapter\Exception\InvalidAdapterException;
 use ker0x\Push\Adapter\Fcm\Exception\InvalidDataException;
@@ -210,7 +211,7 @@ class Fcm
     public function setParameters(array $parameters)
     {
         $this->_checkParameters($parameters);
-        $this->parameters = Hash::merge($this->config('parameters'), $parameters);
+        $this->parameters = Hash::merge($this->getConfig('parameters'), $parameters);
 
         return $this;
     }
@@ -314,9 +315,9 @@ class Fcm
         $options = $this->_getHttpOptions();
 
         $http = new Client();
-        $this->response = $http->post($this->config('api.url'), $message, $options);
+        $this->response = $http->post($this->getConfig('api.url'), $message, $options);
 
-        return $this->response->code === 200;
+        return $this->response->getStatusCode() === Message::STATUS_OK;
     }
 
     /**
