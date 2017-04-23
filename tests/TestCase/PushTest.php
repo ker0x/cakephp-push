@@ -1,10 +1,10 @@
 <?php
-namespace ker0x\Push\Test\TestCase;
+namespace Kerox\Push\Test\TestCase;
 
 use Cake\Core\Configure;
 use Cake\TestSuite\IntegrationTestCase;
-use ker0x\Push\Adapter\FcmAdapter;
-use ker0x\Push\Push;
+use Kerox\Push\Adapter\Fcm;
+use Kerox\Push\Push;
 
 class PushTest extends IntegrationTestCase
 {
@@ -21,7 +21,7 @@ class PushTest extends IntegrationTestCase
     public function testFcmAdapter()
     {
         Configure::write('Push.adapters.Fcm.api.key', $this->api_key);
-        $adapter = new FcmAdapter();
+        $adapter = new Fcm();
         $adapter
             ->setTokens([$this->token])
             ->setNotification([

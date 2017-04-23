@@ -1,21 +1,21 @@
 <?php
 
-namespace ker0x\Push;
+namespace Kerox\Push;
 
 interface AdapterInterface
 {
 
     /**
-     * Send a downstream message to one or more devices.
+     * Send a request
      *
      * @return bool
      */
     public function send();
 
     /**
-     * Return the response of the push
+     * Return the response of the request
      *
-     * @return mixed
+     * @return \Cake\Http\Client\Response
      */
     public function response();
 }

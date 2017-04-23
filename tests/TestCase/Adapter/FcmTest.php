@@ -1,32 +1,30 @@
 <?php
-namespace ker0x\Push\Test\TestCase;
+namespace Kerox\Push\Test\TestCase\Adapter;
 
 use Cake\Core\Configure;
 use Cake\TestSuite\IntegrationTestCase;
-use ker0x\Push\Adapter\Exception\InvalidAdapterException;
-use ker0x\Push\Adapter\FcmAdapter;
-use ker0x\Push\Adapter\Fcm\Exception\InvalidDataException;
-use ker0x\Push\Adapter\Fcm\Exception\InvalidNotificationException;
-use ker0x\Push\Adapter\Fcm\Exception\InvalidParametersException;
-use ker0x\Push\Adapter\Fcm\Exception\InvalidTokenException;
+use Kerox\Push\Adapter\Fcm;
 
-class FcmAdapterTest extends IntegrationTestCase
+class FcmTest extends IntegrationTestCase
 {
 
+    /**
+     * @var \Kerox\Push\Adapter\Fcm
+     */
     public $adapter;
     public $api_key;
     public $token;
 
     public function setUp()
     {
-        $this->adapter = new FcmAdapter();
+        $this->adapter = new Fcm();
         $this->api_key = getenv('FCM_API_KEY');
         $this->token = getenv('TOKEN');
     }
 
     public function testEmptyTokens()
     {
-        $this->expectException(InvalidTokenException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->adapter->setTokens([]);
     }
 
@@ -37,7 +35,7 @@ class FcmAdapterTest extends IntegrationTestCase
             $tokens[] = $i;
         }
 
-        $this->expectException(InvalidTokenException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->adapter->setTokens($tokens);
     }
 
@@ -51,7 +49,7 @@ class FcmAdapterTest extends IntegrationTestCase
 
     public function testEmptyNotification()
     {
-        $this->expectException(InvalidNotificationException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->adapter->setNotification([]);
     }
 
@@ -66,7 +64,7 @@ class FcmAdapterTest extends IntegrationTestCase
 
         try {
             $this->adapter->setNotification($notification);
-        } catch (InvalidNotificationException $e) {
+        } catch (\InvalidArgumentException $e) {
             $exceptionMessage = $e->getMessage();
         }
 
@@ -83,7 +81,7 @@ class FcmAdapterTest extends IntegrationTestCase
 
     public function testEmptyDatas()
     {
-        $this->expectException(InvalidDataException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->adapter->setDatas([]);
     }
 
@@ -107,7 +105,7 @@ class FcmAdapterTest extends IntegrationTestCase
 
     public function testEmptyParameters()
     {
-        $this->expectException(InvalidParametersException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->adapter->setParameters([]);
     }
 
@@ -123,7 +121,9 @@ class FcmAdapterTest extends IntegrationTestCase
             'priority' => 'normal',
             'dry_run' => true,
             'time_to_live' => 0,
-            'restricted_package_name' => null
+            'restricted_package_name' => null,
+            'content_available' => false,
+            'mutable_content' => false
         ], $parameters);
     }
 
@@ -162,7 +162,7 @@ class FcmAdapterTest extends IntegrationTestCase
     public function testSendAndResponse()
     {
         Configure::write('Push.adapters.Fcm.api.key', $this->api_key);
-        $adapter = new FcmAdapter();
+        $adapter = new Fcm();
         $adapter
             ->setTokens([$this->token])
             ->setNotification([
@@ -189,8 +189,8 @@ class FcmAdapterTest extends IntegrationTestCase
     public function testNoApiKeyAdapter()
     {
         Configure::write('Push.adapters.Fcm.api.key', null);
-        $this->expectException(InvalidAdapterException::class);
-        $adapter = new FcmAdapter();
+        $this->expectException(\Exception::class);
+        $adapter = new Fcm();
         $adapter
             ->setTokens([$this->token])
             ->setNotification([
