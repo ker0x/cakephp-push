@@ -36,9 +36,9 @@ Usage
 
 .. code:: php
 
-    use ker0x\Push\Adapter\FcmAdapter;
+    use Kerox\Push\Adapter\Fcm;
 
-    $adapter = new FcmAdapter();
+    $adapter = new Fcm();
     $adapter
         ->setTokens($tokens)
         ->setNotification($notification)
@@ -57,10 +57,10 @@ Example
 
 .. code:: php
 
-    use ker0x\Push\Adapter\FcmAdapter;
-    use ker0x\Push\Push;
+    use Kerox\Push\Adapter\Fcm;
+    use Kerox\Push\Push;
 
-    $adapter = new FcmAdapter();
+    $adapter = new Fcm();
     $adapter
         ->setTokens(['1', '2', '3', '4'])
         ->setNotification([

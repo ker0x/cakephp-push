@@ -10,7 +10,7 @@ To install this plugin, run ``composer require ker0x/cakephp-push`` or add this 
 
     {
         "require": {
-            "ker0x/cakephp-push": "~1.0"
+            "ker0x/cakephp-push": "~2.0"
         }
     }
 

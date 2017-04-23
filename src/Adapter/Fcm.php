@@ -1,22 +1,17 @@
 <?php
 
-namespace ker0x\Push\Adapter\Fcm;
+namespace Kerox\Push\Adapter;
 
 use Cake\Core\Configure;
-use Cake\Core\InstanceConfigTrait;
 use Cake\Http\Client;
 use Cake\Http\Client\Message;
 use Cake\Utility\Hash;
-use ker0x\Push\Adapter\Exception\InvalidAdapterException;
-use ker0x\Push\Adapter\Fcm\Exception\InvalidDataException;
-use ker0x\Push\Adapter\Fcm\Exception\InvalidNotificationException;
-use ker0x\Push\Adapter\Fcm\Exception\InvalidParametersException;
-use ker0x\Push\Adapter\Fcm\Exception\InvalidTokenException;
 
-class Fcm
+class Fcm extends AbstractAdapter
 {
 
-    use InstanceConfigTrait;
+    const PRIORITY_NORMAL = 'normal';
+    const PRIORITY_HIGH = 'high';
 
     /**
      * Array for devices's token
@@ -54,13 +49,6 @@ class Fcm
     protected $payload = [];
 
     /**
-     * Response of the request
-     *
-     * @var \Cake\Http\Client\Response
-     */
-    protected $response;
-
-    /**
      * Default config
      *
      * @var array
@@ -68,10 +56,12 @@ class Fcm
     protected $_defaultConfig = [
         'parameters' => [
             'collapse_key' => null,
-            'priority' => 'normal',
-            'dry_run' => false,
+            'priority' => self::PRIORITY_NORMAL,
+            'content_available' => false,
+            'mutable_content' => false,
             'time_to_live' => 0,
             'restricted_package_name' => null,
+            'dry_run' => false,
         ],
         'http' => [],
     ];
@@ -99,16 +89,13 @@ class Fcm
     /**
      * FcmAdapter constructor.
      *
-     * @throws \ker0x\Push\Adapter\Exception\InvalidAdapterException
+     * @throws \Exception
      */
     public function __construct()
     {
         $config = Configure::read('Push.adapters.Fcm');
-        $this->setConfig($config);
 
-        if ($this->getConfig('api.key') === null) {
-            throw new InvalidAdapterException("No API key set.");
-        }
+        parent::__construct($config);
     }
 
     /**
@@ -237,16 +224,32 @@ class Fcm
     }
 
     /**
+     * Execute the push
+     *
+     * @return bool
+     */
+    public function send()
+    {
+        $message = $this->_buildMessage();
+        $options = $this->_getHttpOptions();
+
+        $http = new Client();
+        $this->response = $http->post($this->getConfig('api.url'), $message, $options);
+
+        return $this->response->getStatusCode() === Message::STATUS_OK;
+    }
+
+    /**
      * Check tokens's array
      *
      * @param array $tokens Token's array
      * @return void
-     * @throws \ker0x\Push\Adapter\Fcm\Exception\InvalidTokenException
+     * @throws \InvalidArgumentException
      */
     private function _checkTokens(array $tokens)
     {
         if (empty($tokens) || count($tokens) > 1000) {
-            throw new InvalidTokenException("Array must contain at least 1 and at most 1000 tokens.");
+            throw new \InvalidArgumentException("Array must contain at least 1 and at most 1000 tokens.");
         }
     }
 
@@ -255,12 +258,12 @@ class Fcm
      *
      * @param array $notification Notification's array
      * @return void
-     * @throws \ker0x\Push\Adapter\Fcm\Exception\InvalidNotificationException
+     * @throws \InvalidArgumentException
      */
     private function _checkNotification(array $notification)
     {
         if (empty($notification) || !isset($notification['title'])) {
-            throw new InvalidNotificationException("Array must contain at least a key title.");
+            throw new \InvalidArgumentException("Array must contain at least a key title.");
         }
 
         $notAllowedKeys = [];
@@ -272,7 +275,7 @@ class Fcm
 
         if (!empty($notAllowedKeys)) {
             $notAllowedKeys = implode(', ', $notAllowedKeys);
-            throw new InvalidNotificationException("The following keys are not allowed: {$notAllowedKeys}");
+            throw new \InvalidArgumentException("The following keys are not allowed: {$notAllowedKeys}");
         }
     }
 
@@ -281,12 +284,12 @@ class Fcm
      *
      * @param array $datas Datas's array
      * @return void
-     * @throws \ker0x\Push\Adapter\Fcm\Exception\InvalidDataException
+     * @throws \InvalidArgumentException
      */
     private function _checkDatas(array $datas)
     {
         if (empty($datas)) {
-            throw new InvalidDataException("Array can not be empty.");
+            throw new \InvalidArgumentException("Array can not be empty.");
         }
     }
 
@@ -295,29 +298,13 @@ class Fcm
      *
      * @param array $parameters Parameters's array
      * @return void
-     * @throws \ker0x\Push\Adapter\Fcm\Exception\InvalidParametersException
+     * @throws \InvalidArgumentException
      */
     private function _checkParameters(array $parameters)
     {
         if (empty($parameters)) {
-            throw new InvalidParametersException("Array can not be empty.");
+            throw new \InvalidArgumentException("Array can not be empty.");
         }
-    }
-
-    /**
-     * Execute the push
-     *
-     * @return bool
-     */
-    protected function _executePush()
-    {
-        $message = $this->_buildMessage();
-        $options = $this->_getHttpOptions();
-
-        $http = new Client();
-        $this->response = $http->post($this->getConfig('api.url'), $message, $options);
-
-        return $this->response->getStatusCode() === Message::STATUS_OK;
     }
 
     /**

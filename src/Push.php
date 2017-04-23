@@ -1,6 +1,6 @@
 <?php
 
-namespace ker0x\Push;
+namespace Kerox\Push;
 
 class Push
 {
@@ -43,7 +43,7 @@ class Push
     /**
      * Return the response of the push.
      *
-     * @return string
+     * @return mixed
      */
     public function response()
     {
