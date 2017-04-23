@@ -13,7 +13,7 @@ abstract class AbstractAdapter implements AdapterInterface
     /**
      * Response of the request
      *
-     * @var \Cake\Http\Client\Response
+     * @var \Psr\Http\Message\ResponseInterface
      */
     protected $response;
 

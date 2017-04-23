@@ -15,7 +15,7 @@ interface AdapterInterface
     /**
      * Return the response of the request
      *
-     * @return \Cake\Http\Client\Response
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function response();
 }

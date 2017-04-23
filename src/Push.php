@@ -43,7 +43,7 @@ class Push
     /**
      * Return the response of the push.
      *
-     * @return mixed
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function response()
     {
