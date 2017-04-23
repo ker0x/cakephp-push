@@ -10,5 +10,5 @@ Requirements
 ------------
 
 * PHP >= 5.6
-* CakePHP >= 3.4
+* CakePHP >= 3.4.*
 
