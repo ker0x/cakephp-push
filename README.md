@@ -13,7 +13,7 @@ Push is a plugin for CakePHP to send push notification through services like Fir
 ## Requirements
 
 * PHP >= 5.6
-* CakePHP >= 3.3.*
+* CakePHP >= 3.4.*
 
 ## Documentation
 
