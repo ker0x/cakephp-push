@@ -114,4 +114,4 @@ Configure::write([
     ],
 ]);
 
-Plugin::load('ker0x\Push', ['path' => ROOT]);
+Plugin::load('Kerox\Push', ['path' => ROOT]);
