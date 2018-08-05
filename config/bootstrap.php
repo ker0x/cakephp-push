@@ -5,6 +5,7 @@
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  */
+
 use Cake\Core\Configure;
 
 if (file_exists(CONFIG . 'push.php')) {
@@ -17,7 +18,7 @@ if (file_exists(CONFIG . 'push.php')) {
                     'key' => null,
                     'url' => 'https://fcm.googleapis.com/fcm/send',
                 ],
-            ]
+            ],
         ],
     ];
 

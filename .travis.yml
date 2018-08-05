@@ -30,9 +30,8 @@ before_script:
   - mkdir -p build/logs
 
 script:
-  - vendor/bin/phpcs -n -p --extensions=php --standard=vendor/cakephp/cakephp-codesniffer/CakePHP --ignore=vendor --ignore=tests/bootstrap.php .
-  - vendor/bin/phpunit --stderr --coverage-clover build/logs/clover.xml
-  - php vendor/bin/coveralls -v
+  - php vendor/bin/phpcs -n -p --extensions=php --standard=vendor/cakephp/cakephp-codesniffer/CakePHP --ignore=vendor --ignore=tests/bootstrap.php .
+  - php vendor/bin/phpunit --stderr --coverage-clover build/logs/clover.xml
 
 notifications:
   email: false
