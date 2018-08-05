@@ -7,7 +7,6 @@ use Kerox\Push\AdapterInterface;
 
 abstract class AbstractAdapter implements AdapterInterface
 {
-
     use InstanceConfigTrait;
 
     /**
@@ -21,6 +20,7 @@ abstract class AbstractAdapter implements AdapterInterface
      * AbstractAdapter constructor.
      *
      * @param string|array $config The Adapter configuration
+     *
      * @throws \Exception
      */
     public function __construct($config)
@@ -28,7 +28,7 @@ abstract class AbstractAdapter implements AdapterInterface
         $this->setConfig($config);
 
         if ($this->getConfig('api.key') === null) {
-            throw new \Exception("No API key set.");
+            throw new \InvalidArgumentException('No API key set.');
         }
     }
 

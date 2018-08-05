@@ -1,39 +1,50 @@
 {
-    "name": "ker0x/cakephp-push",
-    "type": "cakephp-plugin",
-    "description": "CakePHP plugin to send push notification through services like FCM",
-    "homepage": "https://github.com/ker0x/cakephp-push",
-    "keywords": ["cakephp", "push", "notification", "fcm"],
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Romain Monteil",
-            "homepage": "http://kerox.fr",
-            "email": "monteil.romain@gmail.com",
-            "role": "Author"
-        }
-    ],
-    "support": {
-        "issues": "https://github.com/ker0x/cakephp-push/issues",
-        "source": "https://github.com/ker0x/cakephp-push"
-    },
-    "require": {
-        "php": ">=5.6",
-        "cakephp/cakephp": ">=3.4.0 <4.0"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^5.0",
-        "cakephp/cakephp-codesniffer": "^2.0",
-        "satooshi/php-coveralls": "^1.0"
-    },
-    "autoload": {
-        "psr-4": {
-            "Kerox\\Push\\": "src"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Kerox\\Push\\Test\\": "tests"
-        }
+  "name": "ker0x/cakephp-push",
+  "type": "cakephp-plugin",
+  "description": "CakePHP plugin to send push notification through services like FCM",
+  "homepage": "https://github.com/ker0x/cakephp-push",
+  "keywords": [
+    "cakephp",
+    "push",
+    "notification",
+    "fcm"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Romain Monteil",
+      "email": "monteil.romain@gmail.com",
+      "homepage": "http://kerox.fr",
+      "role": "Author"
     }
+  ],
+  "support": {
+    "issues": "https://github.com/ker0x/cakephp-push/issues",
+    "source": "https://github.com/ker0x/cakephp-push"
+  },
+  "require": {
+    "php": ">=5.6",
+    "cakephp/cakephp": ">=3.4.0 < 4.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^5.0",
+    "cakephp/cakephp-codesniffer": "^2.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Kerox\\Push\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Kerox\\Push\\Test\\": "tests"
+    }
+  },
+  "scripts": {
+    "test": "phpunit",
+    "cs-fix": "phpcbf --colors --extensions=php --standard=vendor/cakephp/cakephp-codesniffer/CakePHP ./src"
+  },
+  "config": {
+    "sort-packages": true
+  }
 }

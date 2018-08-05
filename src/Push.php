@@ -4,7 +4,6 @@ namespace Kerox\Push;
 
 class Push
 {
-
     /**
      * @var AdapterInterface
      */

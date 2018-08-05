@@ -9,7 +9,6 @@ use Cake\Utility\Hash;
 
 class Fcm extends AbstractAdapter
 {
-
     const PRIORITY_NORMAL = 'normal';
     const PRIORITY_HIGH = 'high';
 
@@ -112,6 +111,7 @@ class Fcm extends AbstractAdapter
      * Setter for tokens
      *
      * @param array $tokens Array of devices's token
+     *
      * @return $this
      */
     public function setTokens(array $tokens)
@@ -136,6 +136,7 @@ class Fcm extends AbstractAdapter
      * Setter for notification
      *
      * @param array $notification Array of keys for the notification
+     *
      * @return $this
      */
     public function setNotification(array $notification)
@@ -163,14 +164,15 @@ class Fcm extends AbstractAdapter
      * Setter for datas
      *
      * @param array $datas Array of datas for the push
+     *
      * @return $this
      */
     public function setDatas(array $datas)
     {
         $this->_checkDatas($datas);
         foreach ($datas as $key => $value) {
-            if (is_bool($value)) {
-                $value = ($value) ? 'true' : 'false';
+            if (\is_bool($value)) {
+                $value = $value ? 'true' : 'false';
             }
             $datas[$key] = (string)$value;
         }
@@ -193,6 +195,7 @@ class Fcm extends AbstractAdapter
      * Setter for parameters
      *
      * @param array $parameters Array of parameters for the push
+     *
      * @return $this
      */
     public function setParameters(array $parameters)
@@ -243,13 +246,13 @@ class Fcm extends AbstractAdapter
      * Check tokens's array
      *
      * @param array $tokens Token's array
-     * @return void
+     *
      * @throws \InvalidArgumentException
      */
     private function _checkTokens(array $tokens)
     {
-        if (empty($tokens) || count($tokens) > 1000) {
-            throw new \InvalidArgumentException("Array must contain at least 1 and at most 1000 tokens.");
+        if (empty($tokens) || \count($tokens) > 1000) {
+            throw new \InvalidArgumentException('Array must contain at least 1 and at most 1000 tokens.');
         }
     }
 
@@ -257,18 +260,18 @@ class Fcm extends AbstractAdapter
      * Check notification's array
      *
      * @param array $notification Notification's array
-     * @return void
+     *
      * @throws \InvalidArgumentException
      */
     private function _checkNotification(array $notification)
     {
         if (empty($notification) || !isset($notification['title'])) {
-            throw new \InvalidArgumentException("Array must contain at least a key title.");
+            throw new \InvalidArgumentException('Array must contain at least a key title.');
         }
 
         $notAllowedKeys = [];
         foreach ($notification as $key => $value) {
-            if (!in_array($key, $this->_allowedNotificationKeys)) {
+            if (!\in_array($key, $this->_allowedNotificationKeys, true)) {
                 $notAllowedKeys[] = $key;
             }
         }
@@ -283,13 +286,13 @@ class Fcm extends AbstractAdapter
      * Check datas's array
      *
      * @param array $datas Datas's array
-     * @return void
+     *
      * @throws \InvalidArgumentException
      */
     private function _checkDatas(array $datas)
     {
         if (empty($datas)) {
-            throw new \InvalidArgumentException("Array can not be empty.");
+            throw new \InvalidArgumentException('Array can not be empty.');
         }
     }
 
@@ -297,13 +300,13 @@ class Fcm extends AbstractAdapter
      * Check parameters's array
      *
      * @param array $parameters Parameters's array
-     * @return void
+     *
      * @throws \InvalidArgumentException
      */
     private function _checkParameters(array $parameters)
     {
         if (empty($parameters)) {
-            throw new \InvalidArgumentException("Array can not be empty.");
+            throw new \InvalidArgumentException('Array can not be empty.');
         }
     }
 
@@ -315,7 +318,7 @@ class Fcm extends AbstractAdapter
     private function _buildMessage()
     {
         $tokens = $this->getTokens();
-        $message = (count($tokens) > 1) ? ['registration_ids' => $tokens] : ['to' => current($tokens)];
+        $message = (\count($tokens) > 1) ? ['registration_ids' => $tokens] : ['to' => current($tokens)];
 
         $payload = $this->getPayload();
         if (!empty($payload)) {

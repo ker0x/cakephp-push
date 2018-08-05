@@ -1,10 +1,18 @@
 imports:
     - php
 
+checks:
+    php:
+        code_rating: true
+        duplication: true
+
 filter:
     excluded_paths:
         - docs/
         - tests/
+    dependency_paths:
+        - vendor/
+
 tools:
     php_mess_detector: true
     php_cpd:
@@ -19,3 +27,21 @@ tools:
         excluded_dirs:
             1: docs/
             2: tests/
+
+build:
+    nodes:
+        analysis:
+            project_setup:
+                override: true
+            tests:
+                override: [php-scrutinizer-run]
+    environment:
+        php:
+            version: 7.1
+    tests:
+        override:
+            -
+                command: 'vendor/bin/phpunit --coverage-clover=clover.xml'
+                coverage:
+                    file: 'clover.xml'
+                    format: 'clover'
