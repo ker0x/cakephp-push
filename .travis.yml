@@ -31,7 +31,7 @@ before_script:
 
 script:
   - php vendor/bin/phpcs -n -p --extensions=php --standard=vendor/cakephp/cakephp-codesniffer/CakePHP --ignore=vendor --ignore=tests/bootstrap.php .
-  - php vendor/bin/phpunit --stderr --coverage-clover build/logs/clover.xml
+  - php vendor/bin/phpunit --stderr --coverage-clover build/coverage/xml
 
 after_script:
   - vendor/bin/codacycoverage clover build/coverage/xml
