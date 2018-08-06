@@ -1,10 +1,29 @@
-[![Build](https://img.shields.io/travis/ker0x/cakephp-push/master.svg?style=flat-square)](https://travis-ci.org/ker0x/cakephp-push)
-[![Coverage](https://img.shields.io/coveralls/ker0x/cakephp-push/master.svg?style=flat-square)](https://coveralls.io/github/ker0x/cakephp-push)
-[![Code Quality](https://img.shields.io/scrutinizer/g/ker0x/cakephp-push.svg?style=flat-square)](https://scrutinizer-ci.com/g/ker0x/cakephp-push/)
-[![Total Downloads](https://img.shields.io/packagist/dt/ker0x/cakephp-push.svg?style=flat-square)](https://packagist.org/packages/ker0x/cakephp-push)
-[![Latest Stable Version](https://img.shields.io/packagist/v/ker0x/cakephp-push.svg?style=flat-square)](https://packagist.org/packages/ker0x/cakephp-push)
-[![Documentation Status](https://readthedocs.org/projects/cakephp-push/badge/?version=latest&style=flat-square)](http://cakephp-push.readthedocs.org/en/latest/?badge=latest)
-[![License](https://img.shields.io/packagist/l/ker0x/cakephp-push.svg?style=flat-square)](https://packagist.org/packages/ker0x/cakephp-push)
+<div align="center">
+    <a href="https://travis-ci.org/ker0x/cakephp-push" title="Build">
+        <img src="https://img.shields.io/travis/ker0x/cakephp-push.svg?style=for-the-badge" alt="Build">
+    </a>
+    <a href="https://scrutinizer-ci.com/g/ker0x/cakephp-push/" title="Coverage">
+        <img src="https://img.shields.io/scrutinizer/coverage/g/ker0x/cakephp-push.svg?style=for-the-badge" alt="Coverage">
+    </a>
+    <a href="https://scrutinizer-ci.com/g/ker0x/cakephp-push/" title="Code Quality">
+        <img src="https://img.shields.io/scrutinizer/g/ker0x/cakephp-push.svg?style=for-the-badge" alt="Code Quality">
+    </a>
+    <a href="https://php.net" title="PHP Version">
+        <img src="https://img.shields.io/badge/php-%3E%3D%205.6-8892BF.svg?style=for-the-badge" alt="PHP Version">
+    </a>
+    <a href="https://packagist.org/packages/ker0x/cakephp-push" title="Downloads">
+        <img src="https://img.shields.io/packagist/dt/ker0x/cakephp-push.svg?style=for-the-badge" alt="Downloads">
+    </a>
+    <a href="https://packagist.org/packages/ker0x/cakephp-push" title="Latest Stable Version">
+        <img src="https://img.shields.io/packagist/v/ker0x/cakephp-push.svg?style=for-the-badge" alt="Latest Stable Version">
+    </a>
+    <a href="http://cakephp-push.readthedocs.org/en/latest/?badge=latest" title="Documentation">
+        <img src="https://readthedocs.org/projects/cakephp-push/badge/?version=latest&style=for-the-badge" alt="Chat">
+    </a>
+    <a href="https://packagist.org/packages/ker0x/cakephp-push" title="License">
+        <img src="https://img.shields.io/packagist/l/ker0x/cakephp-push.svg?style=for-the-badge" alt="License">
+    </a>
+</div>
 
 # CakePHP Push Plugin
 
