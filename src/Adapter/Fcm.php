@@ -9,345 +9,353 @@ use Cake\Utility\Hash;
 
 class Fcm extends AbstractAdapter
 {
-    const PRIORITY_NORMAL = 'normal';
-    const PRIORITY_HIGH = 'high';
+	const PRIORITY_NORMAL = 'normal';
+	const PRIORITY_HIGH = 'high';
 
-    /**
-     * Array for devices's token
-     *
-     * @var array
-     */
-    protected $tokens = [];
+	/**
+	 * Array for devices's token
+	 *
+	 * @var array
+	 */
+	protected $tokens = [];
 
-    /**
-     * Array for the notification
-     *
-     * @var array
-     */
-    protected $notification = [];
+	/**
+	 * Array for the notification
+	 *
+	 * @var array
+	 */
+	protected $notification = [];
 
-    /**
-     * Array of datas
-     *
-     * @var array
-     */
-    protected $datas = [];
+	/**
+	 * Array of datas
+	 *
+	 * @var array
+	 */
+	protected $datas = [];
 
-    /**
-     * Array of request parameters
-     *
-     * @var array
-     */
-    protected $parameters = [];
+	/**
+	 * Array of request parameters
+	 *
+	 * @var array
+	 */
+	protected $parameters = [];
 
-    /**
-     * Array of payload
-     *
-     * @var array
-     */
-    protected $payload = [];
+	/**
+	 * Array of payload
+	 *
+	 * @var array
+	 */
+	protected $payload = [];
 
-    /**
-     * Default config
-     *
-     * @var array
-     */
-    protected $_defaultConfig = [
-        'parameters' => [
-            'collapse_key' => null,
-            'priority' => self::PRIORITY_NORMAL,
-            'content_available' => false,
-            'mutable_content' => false,
-            'time_to_live' => 0,
-            'restricted_package_name' => null,
-            'dry_run' => false,
-        ],
-        'http' => [],
-    ];
+	/**
+	 * Default config
+	 *
+	 * @var array
+	 */
+	protected $_defaultConfig = [
+		'parameters' => [
+			'collapse_key' => null,
+			'priority' => self::PRIORITY_NORMAL,
+			'content_available' => false,
+			'mutable_content' => false,
+			'time_to_live' => 0,
+			'restricted_package_name' => null,
+			'dry_run' => false,
+		],
+		'http' => [],
+	];
 
-    /**
-     * List of keys allowed to be used in notification array.
-     *
-     * @var array
-     */
-    protected $_allowedNotificationKeys = [
-        'title',
-        'body',
-        'icon',
-        'sound',
-        'badge',
-        'tag',
-        'color',
-        'click_action',
-        'body_loc_key',
-        'body_loc_args',
-        'title_loc_key',
-        'title_loc_args',
-    ];
+	/**
+	 * List of keys allowed to be used in notification array.
+	 *
+	 * @var array
+	 */
+	protected $_allowedNotificationKeys = [
+		'title',
+		'body',
+		'icon',
+		'sound',
+		'badge',
+		'tag',
+		'color',
+		'click_action',
+		'body_loc_key',
+		'body_loc_args',
+		'title_loc_key',
+		'title_loc_args',
+	];
 
-    /**
-     * FcmAdapter constructor.
-     *
-     * @throws \Exception
-     */
-    public function __construct()
-    {
-        $config = Configure::read('Push.adapters.Fcm');
+	/**
+	 * FcmAdapter constructor.
+	 *
+	 * @throws \Exception
+	 */
+	public function __construct()
+	{
+		if (Configure::check('Push.adapters.Fcm') == false) {
+			try {
+				Configure::load('push');
+			} catch (\Exception $e) {
+				exit($e->getMessage() . "\n");
+			}
+		}
 
-        parent::__construct($config);
-    }
+		$config = Configure::read('Push.adapters.Fcm');
 
-    /**
-     * Getter for tokens
-     *
-     * @return array
-     */
-    public function getTokens()
-    {
-        return $this->tokens;
-    }
+		parent::__construct($config);
+	}
 
-    /**
-     * Setter for tokens
-     *
-     * @param array $tokens Array of devices's token
-     *
-     * @return $this
-     */
-    public function setTokens(array $tokens)
-    {
-        $this->_checkTokens($tokens);
-        $this->tokens = $tokens;
+	/**
+	 * Getter for tokens
+	 *
+	 * @return array
+	 */
+	public function getTokens()
+	{
+		return $this->tokens;
+	}
 
-        return $this;
-    }
+	/**
+	 * Setter for tokens
+	 *
+	 * @param array $tokens Array of devices's token
+	 *
+	 * @return $this
+	 */
+	public function setTokens(array $tokens)
+	{
+		$this->_checkTokens($tokens);
+		$this->tokens = $tokens;
 
-    /**
-     * Getter for notification
-     *
-     * @return array
-     */
-    public function getNotification()
-    {
-        return $this->notification;
-    }
+		return $this;
+	}
 
-    /**
-     * Setter for notification
-     *
-     * @param array $notification Array of keys for the notification
-     *
-     * @return $this
-     */
-    public function setNotification(array $notification)
-    {
-        $this->_checkNotification($notification);
-        if (!isset($notification['icon'])) {
-            $notification['icon'] = 'myicon';
-        }
-        $this->notification = $notification;
+	/**
+	 * Getter for notification
+	 *
+	 * @return array
+	 */
+	public function getNotification()
+	{
+		return $this->notification;
+	}
 
-        return $this;
-    }
+	/**
+	 * Setter for notification
+	 *
+	 * @param array $notification Array of keys for the notification
+	 *
+	 * @return $this
+	 */
+	public function setNotification(array $notification)
+	{
+		$this->_checkNotification($notification);
+		if (!isset($notification['icon'])) {
+			$notification['icon'] = 'myicon';
+		}
+		$this->notification = $notification;
 
-    /**
-     * Getter for datas
-     *
-     * @return array
-     */
-    public function getDatas()
-    {
-        return $this->datas;
-    }
+		return $this;
+	}
 
-    /**
-     * Setter for datas
-     *
-     * @param array $datas Array of datas for the push
-     *
-     * @return $this
-     */
-    public function setDatas(array $datas)
-    {
-        $this->_checkDatas($datas);
-        foreach ($datas as $key => $value) {
-            if (\is_bool($value)) {
-                $value = $value ? 'true' : 'false';
-            }
-            $datas[$key] = (string)$value;
-        }
-        $this->datas = $datas;
+	/**
+	 * Getter for datas
+	 *
+	 * @return array
+	 */
+	public function getDatas()
+	{
+		return $this->datas;
+	}
 
-        return $this;
-    }
+	/**
+	 * Setter for datas
+	 *
+	 * @param array $datas Array of datas for the push
+	 *
+	 * @return $this
+	 */
+	public function setDatas(array $datas)
+	{
+		$this->_checkDatas($datas);
+		foreach ($datas as $key => $value) {
+			if (\is_bool($value)) {
+				$value = $value ? 'true' : 'false';
+			}
+			$datas[$key] = (string)$value;
+		}
+		$this->datas = $datas;
 
-    /**
-     * Getter for parameters
-     *
-     * @return array
-     */
-    public function getParameters()
-    {
-        return $this->parameters;
-    }
+		return $this;
+	}
 
-    /**
-     * Setter for parameters
-     *
-     * @param array $parameters Array of parameters for the push
-     *
-     * @return $this
-     */
-    public function setParameters(array $parameters)
-    {
-        $this->_checkParameters($parameters);
-        $this->parameters = Hash::merge($this->getConfig('parameters'), $parameters);
+	/**
+	 * Getter for parameters
+	 *
+	 * @return array
+	 */
+	public function getParameters()
+	{
+		return $this->parameters;
+	}
 
-        return $this;
-    }
+	/**
+	 * Setter for parameters
+	 *
+	 * @param array $parameters Array of parameters for the push
+	 *
+	 * @return $this
+	 */
+	public function setParameters(array $parameters)
+	{
+		$this->_checkParameters($parameters);
+		$this->parameters = Hash::merge($this->getConfig('parameters'), $parameters);
 
-    /**
-     * Getter for payload
-     *
-     * @return array
-     */
-    public function getPayload()
-    {
-        $notification = $this->getNotification();
-        if (!empty($notification)) {
-            $this->payload['notification'] = $notification;
-        }
+		return $this;
+	}
 
-        $datas = $this->getDatas();
-        if (!empty($datas)) {
-            $this->payload['data'] = $datas;
-        }
+	/**
+	 * Getter for payload
+	 *
+	 * @return array
+	 */
+	public function getPayload()
+	{
+		$notification = $this->getNotification();
+		if (!empty($notification)) {
+			$this->payload['notification'] = $notification;
+		}
 
-        return $this->payload;
-    }
+		$datas = $this->getDatas();
+		if (!empty($datas)) {
+			$this->payload['data'] = $datas;
+		}
 
-    /**
-     * Execute the push
-     *
-     * @return bool
-     */
-    public function send()
-    {
-        $message = $this->_buildMessage();
-        $options = $this->_getHttpOptions();
+		return $this->payload;
+	}
 
-        $http = new Client();
-        $this->response = $http->post($this->getConfig('api.url'), $message, $options);
+	/**
+	 * Execute the push
+	 *
+	 * @return bool
+	 */
+	public function send()
+	{
+		$message = $this->_buildMessage();
+		$options = $this->_getHttpOptions();
 
-        return $this->response->getStatusCode() === Message::STATUS_OK;
-    }
+		$http = new Client();
+		$this->response = $http->post($this->getConfig('api.url'), $message, $options);
 
-    /**
-     * Check tokens's array
-     *
-     * @param array $tokens Token's array
-     *
-     * @throws \InvalidArgumentException
-     */
-    private function _checkTokens(array $tokens)
-    {
-        if (empty($tokens) || \count($tokens) > 1000) {
-            throw new \InvalidArgumentException('Array must contain at least 1 and at most 1000 tokens.');
-        }
-    }
+		return $this->response->getStatusCode() === Message::STATUS_OK;
+	}
 
-    /**
-     * Check notification's array
-     *
-     * @param array $notification Notification's array
-     *
-     * @throws \InvalidArgumentException
-     */
-    private function _checkNotification(array $notification)
-    {
-        if (empty($notification) || !isset($notification['title'])) {
-            throw new \InvalidArgumentException('Array must contain at least a key title.');
-        }
+	/**
+	 * Check tokens's array
+	 *
+	 * @param array $tokens Token's array
+	 *
+	 * @throws \InvalidArgumentException
+	 */
+	private function _checkTokens(array $tokens)
+	{
+		if (empty($tokens) || \count($tokens) > 1000) {
+			throw new \InvalidArgumentException('Array must contain at least 1 and at most 1000 tokens.');
+		}
+	}
 
-        $notAllowedKeys = [];
-        foreach ($notification as $key => $value) {
-            if (!\in_array($key, $this->_allowedNotificationKeys, true)) {
-                $notAllowedKeys[] = $key;
-            }
-        }
+	/**
+	 * Check notification's array
+	 *
+	 * @param array $notification Notification's array
+	 *
+	 * @throws \InvalidArgumentException
+	 */
+	private function _checkNotification(array $notification)
+	{
+		if (empty($notification) || !isset($notification['title'])) {
+			throw new \InvalidArgumentException('Array must contain at least a key title.');
+		}
 
-        if (!empty($notAllowedKeys)) {
-            $notAllowedKeys = implode(', ', $notAllowedKeys);
-            throw new \InvalidArgumentException("The following keys are not allowed: {$notAllowedKeys}");
-        }
-    }
+		$notAllowedKeys = [];
+		foreach ($notification as $key => $value) {
+			if (!\in_array($key, $this->_allowedNotificationKeys, true)) {
+				$notAllowedKeys[] = $key;
+			}
+		}
 
-    /**
-     * Check datas's array
-     *
-     * @param array $datas Datas's array
-     *
-     * @throws \InvalidArgumentException
-     */
-    private function _checkDatas(array $datas)
-    {
-        if (empty($datas)) {
-            throw new \InvalidArgumentException('Array can not be empty.');
-        }
-    }
+		if (!empty($notAllowedKeys)) {
+			$notAllowedKeys = implode(', ', $notAllowedKeys);
+			throw new \InvalidArgumentException("The following keys are not allowed: {$notAllowedKeys}");
+		}
+	}
 
-    /**
-     * Check parameters's array
-     *
-     * @param array $parameters Parameters's array
-     *
-     * @throws \InvalidArgumentException
-     */
-    private function _checkParameters(array $parameters)
-    {
-        if (empty($parameters)) {
-            throw new \InvalidArgumentException('Array can not be empty.');
-        }
-    }
+	/**
+	 * Check datas's array
+	 *
+	 * @param array $datas Datas's array
+	 *
+	 * @throws \InvalidArgumentException
+	 */
+	private function _checkDatas(array $datas)
+	{
+		if (empty($datas)) {
+			throw new \InvalidArgumentException('Array can not be empty.');
+		}
+	}
 
-    /**
-     * Build the message
-     *
-     * @return string
-     */
-    private function _buildMessage()
-    {
-        $tokens = $this->getTokens();
-        $message = (\count($tokens) > 1) ? ['registration_ids' => $tokens] : ['to' => current($tokens)];
+	/**
+	 * Check parameters's array
+	 *
+	 * @param array $parameters Parameters's array
+	 *
+	 * @throws \InvalidArgumentException
+	 */
+	private function _checkParameters(array $parameters)
+	{
+		if (empty($parameters)) {
+			throw new \InvalidArgumentException('Array can not be empty.');
+		}
+	}
 
-        $payload = $this->getPayload();
-        if (!empty($payload)) {
-            $message += $payload;
-        }
+	/**
+	 * Build the message
+	 *
+	 * @return string
+	 */
+	private function _buildMessage()
+	{
+		$tokens = $this->getTokens();
+		$message = (\count($tokens) > 1) ? ['registration_ids' => $tokens] : ['to' => current($tokens)];
 
-        $parameters = $this->getParameters();
-        if (!empty($parameters)) {
-            $message += $parameters;
-        }
+		$payload = $this->getPayload();
+		if (!empty($payload)) {
+			$message += $payload;
+		}
 
-        return json_encode($message);
-    }
+		$parameters = $this->getParameters();
+		if (!empty($parameters)) {
+			$message += $parameters;
+		}
 
-    /**
-     * Return options for the HTTP request
-     *
-     * @return array $options
-     */
-    private function _getHttpOptions()
-    {
-        $options = Hash::merge($this->getConfig('http'), [
-            'type' => 'json',
-            'headers' => [
-                'Authorization' => 'key=' . $this->getConfig('api.key'),
-                'Content-Type' => 'application/json',
-            ],
-        ]);
+		return json_encode($message);
+	}
 
-        return $options;
-    }
+	/**
+	 * Return options for the HTTP request
+	 *
+	 * @return array $options
+	 */
+	private function _getHttpOptions()
+	{
+		$options = Hash::merge($this->getConfig('http'), [
+			'type' => 'json',
+			'headers' => [
+				'Authorization' => 'key=' . $this->getConfig('api.key'),
+				'Content-Type' => 'application/json',
+			],
+		]);
+
+		return $options;
+	}
 }
