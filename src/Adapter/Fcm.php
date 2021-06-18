@@ -96,7 +96,7 @@ class Fcm extends AbstractAdapter
 			try {
 				Configure::load('push');
 			} catch (\Exception $e) {
-				exit($e->getMessage() . "\n");
+				throw new \RuntimeException($e->getMessage());
 			}
 		}
 
