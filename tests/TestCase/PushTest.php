@@ -43,8 +43,8 @@ class PushTest extends IntegrationTestCase
         $response = $push->response();
 
         $this->assertTrue($result);
-        $this->assertEquals(1, $response->json['success']);
-        $this->assertEquals(0, $response->json['failure']);
+        $this->assertEquals(1, $response->getJson()['success']);
+        $this->assertEquals(0, $response->getJson()['failure']);
     }
 
     public function tearDown()
