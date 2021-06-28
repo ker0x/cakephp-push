@@ -92,6 +92,14 @@ class Fcm extends AbstractAdapter
      */
     public function __construct()
     {
+        if (Configure::check('Push.adapters.Fcm') === false) {
+            try {
+                Configure::load('push');
+            } catch (\Exception $e) {
+                throw new \RuntimeException($e->getMessage());
+            }
+        }
+
         $config = Configure::read('Push.adapters.Fcm');
 
         parent::__construct($config);
