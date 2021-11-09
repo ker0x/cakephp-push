@@ -31,8 +31,8 @@ Push is a plugin for CakePHP to send push notification through services like Fir
 
 ## Requirements
 
-* PHP >= 5.6
-* CakePHP >= 3.4.*
+* PHP >= 7.2
+* CakePHP >= 4.0
 
 ## Documentation
 
