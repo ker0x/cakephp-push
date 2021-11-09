@@ -3,10 +3,11 @@
 namespace Kerox\Push\Adapter;
 
 use Cake\Core\InstanceConfigTrait;
+use InvalidArgumentException;
 use Kerox\Push\AdapterInterface;
 
-abstract class AbstractAdapter implements AdapterInterface
-{
+abstract class AbstractAdapter implements AdapterInterface {
+
     use InstanceConfigTrait;
 
     /**
@@ -17,31 +18,29 @@ abstract class AbstractAdapter implements AdapterInterface
     protected $response;
 
     /**
-     * AbstractAdapter constructor.
      *
-     * @param string|array $config The Adapter configuration
+     * @param array|string $config The Adapter configuration
      *
      * @throws \Exception
      */
-    public function __construct($config)
-    {
+    public function __construct($config) {
         $this->setConfig($config);
 
         if ($this->getConfig('api.key') === null) {
-            throw new \InvalidArgumentException('No API key set.');
+            throw new InvalidArgumentException('No API key set.');
         }
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     abstract public function send();
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function response()
-    {
+    public function response() {
         return $this->response;
     }
+
 }

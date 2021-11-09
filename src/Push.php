@@ -2,30 +2,28 @@
 
 namespace Kerox\Push;
 
-class Push
-{
+class Push {
+
     /**
-     * @var AdapterInterface
+     * @var \Kerox\Push\AdapterInterface
      */
     protected $adapter;
 
     /**
      * Constructor.
      *
-     * @param AdapterInterface $adapter The adapter
+     * @param \Kerox\Push\AdapterInterface $adapter The adapter
      */
-    public function __construct(AdapterInterface $adapter)
-    {
+    public function __construct(AdapterInterface $adapter) {
         $this->adapter = $adapter;
     }
 
     /**
      * Get the Adapter.
      *
-     * @return AdapterInterface adapter
+     * @return \Kerox\Push\AdapterInterface adapter
      */
-    public function getAdapter()
-    {
+    public function getAdapter() {
         return $this->adapter;
     }
 
@@ -34,8 +32,7 @@ class Push
      *
      * @return bool
      */
-    public function send()
-    {
+    public function send() {
         return $this->getAdapter()->send();
     }
 
@@ -44,8 +41,8 @@ class Push
      *
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function response()
-    {
+    public function response() {
         return $this->getAdapter()->response();
     }
+
 }

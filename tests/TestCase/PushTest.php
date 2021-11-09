@@ -1,40 +1,51 @@
 <?php
+
 namespace Kerox\Push\Test\TestCase;
 
 use Cake\Core\Configure;
-use Cake\TestSuite\IntegrationTestCase;
+use Cake\TestSuite\TestCase;
 use Kerox\Push\Adapter\Fcm;
 use Kerox\Push\Push;
 
-class PushTest extends IntegrationTestCase
-{
+class PushTest extends TestCase {
 
+    /**
+     * @var array|string|false
+     */
     public $api_key;
+
+    /**
+     * @var array|string|false
+     */
     public $token;
 
-    public function setUp()
-    {
+    /**
+     * @return void
+     */
+    public function setUp(): void {
         $this->api_key = getenv('FCM_API_KEY');
         $this->token = getenv('TOKEN');
     }
 
-    public function testFcmAdapter()
-    {
+    /**
+     * @return void
+     */
+    public function testFcmAdapter() {
         Configure::write('Push.adapters.Fcm.api.key', $this->api_key);
         $adapter = new Fcm();
         $adapter
             ->setTokens([$this->token])
             ->setNotification([
                 'title' => 'Hello World',
-                'body' => 'My awesome Hello World!'
+                'body' => 'My awesome Hello World!',
             ])
             ->setDatas([
                 'data-1' => 'Lorem ipsum',
                 'data-2' => 1234,
-                'data-3' => true
+                'data-3' => true,
             ])
             ->setParameters([
-                'dry_run' => true
+                'dry_run' => true,
             ]);
 
         $push = new Push($adapter);
@@ -47,8 +58,11 @@ class PushTest extends IntegrationTestCase
         $this->assertEquals(0, $response->getJson()['failure']);
     }
 
-    public function tearDown()
-    {
+    /**
+     * @return void
+     */
+    public function tearDown(): void {
         unset($this->api_key, $this->token);
     }
+
 }

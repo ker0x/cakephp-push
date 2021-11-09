@@ -2,8 +2,7 @@
 
 namespace Kerox\Push;
 
-interface AdapterInterface
-{
+interface AdapterInterface {
 
     /**
      * Send a request
@@ -18,4 +17,5 @@ interface AdapterInterface
      * @return \Psr\Http\Message\ResponseInterface
      */
     public function response();
+
 }

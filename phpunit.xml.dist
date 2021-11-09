@@ -1,37 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="./tests/bootstrap.php"
-         backupGlobals="false"
-         backupStaticAttributes="false"
-         colors="true"
-         verbose="true"
-         convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true"
-         processIsolation="false"
-         stopOnFailure="false"
->
-    <!-- Add any additional test suites you want to run here -->
+<phpunit
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    colors="true"
+    bootstrap="tests/bootstrap.php"
+    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+    <coverage>
+        <include>
+            <directory suffix=".php">src/</directory>
+        </include>
+    </coverage>
+    <php>
+        <ini name="memory_limit" value="-1"/>
+        <ini name="apc.enable_cli" value="1"/>
+        <ini name="error_reporting" value="16383"/>
+    </php>
     <testsuites>
-        <testsuite name="Push Test Suite">
-            <directory>./tests/TestCase</directory>
+        <testsuite name="ide-helper">
+            <directory>tests/TestCase/</directory>
         </testsuite>
     </testsuites>
-
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">./src</directory>
-        </whitelist>
-
-        <!-- Prevent coverage reports from looking in tests and vendors -->
-        <blacklist>
-            <directory suffix=".php">./docs</directory>
-            <directory suffix=".php">./vendor</directory>
-            <directory suffix=".php">./tests</directory>
-            <file>./tests/bootstrap.php</file>
-        </blacklist>
-    </filter>
-
-    <logging>
-        <log type="coverage-clover" target="build/logs/clover.xml"/>
-    </logging>
+    <listeners>
+        <listener class="Cake\TestSuite\Fixture\FixtureInjector">
+            <arguments>
+                <object class="Cake\TestSuite\Fixture\FixtureManager"/>
+            </arguments>
+        </listener>
+    </listeners>
 </phpunit>
