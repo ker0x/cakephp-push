@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Push Plugin example config
  *

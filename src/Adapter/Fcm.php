@@ -6,11 +6,20 @@ use Cake\Core\Configure;
 use Cake\Http\Client;
 use Cake\Http\Client\Message;
 use Cake\Utility\Hash;
+use InvalidArgumentException;
+use RuntimeException;
 
-class Fcm extends AbstractAdapter
-{
-    const PRIORITY_NORMAL = 'normal';
-    const PRIORITY_HIGH = 'high';
+class Fcm extends AbstractAdapter {
+
+    /**
+     * @var string
+     */
+    public const PRIORITY_NORMAL = 'normal';
+
+    /**
+     * @var string
+     */
+    public const PRIORITY_HIGH = 'high';
 
     /**
      * Array for devices's token
@@ -86,17 +95,15 @@ class Fcm extends AbstractAdapter
     ];
 
     /**
-     * FcmAdapter constructor.
      *
      * @throws \Exception
      */
-    public function __construct()
-    {
+    public function __construct() {
         if (Configure::check('Push.adapters.Fcm') === false) {
             try {
                 Configure::load('push');
             } catch (\Exception $e) {
-                throw new \RuntimeException($e->getMessage());
+                throw new RuntimeException($e->getMessage());
             }
         }
 
@@ -110,8 +117,7 @@ class Fcm extends AbstractAdapter
      *
      * @return array
      */
-    public function getTokens()
-    {
+    public function getTokens() {
         return $this->tokens;
     }
 
@@ -122,8 +128,7 @@ class Fcm extends AbstractAdapter
      *
      * @return $this
      */
-    public function setTokens(array $tokens)
-    {
+    public function setTokens(array $tokens) {
         $this->_checkTokens($tokens);
         $this->tokens = $tokens;
 
@@ -135,8 +140,7 @@ class Fcm extends AbstractAdapter
      *
      * @return array
      */
-    public function getNotification()
-    {
+    public function getNotification() {
         return $this->notification;
     }
 
@@ -147,8 +151,7 @@ class Fcm extends AbstractAdapter
      *
      * @return $this
      */
-    public function setNotification(array $notification)
-    {
+    public function setNotification(array $notification) {
         $this->_checkNotification($notification);
         if (!isset($notification['icon'])) {
             $notification['icon'] = 'myicon';
@@ -163,8 +166,7 @@ class Fcm extends AbstractAdapter
      *
      * @return array
      */
-    public function getDatas()
-    {
+    public function getDatas() {
         return $this->datas;
     }
 
@@ -175,8 +177,7 @@ class Fcm extends AbstractAdapter
      *
      * @return $this
      */
-    public function setDatas(array $datas)
-    {
+    public function setDatas(array $datas) {
         $this->_checkDatas($datas);
         foreach ($datas as $key => $value) {
             if (\is_bool($value)) {
@@ -194,8 +195,7 @@ class Fcm extends AbstractAdapter
      *
      * @return array
      */
-    public function getParameters()
-    {
+    public function getParameters() {
         return $this->parameters;
     }
 
@@ -206,8 +206,7 @@ class Fcm extends AbstractAdapter
      *
      * @return $this
      */
-    public function setParameters(array $parameters)
-    {
+    public function setParameters(array $parameters) {
         $this->_checkParameters($parameters);
         $this->parameters = Hash::merge($this->getConfig('parameters'), $parameters);
 
@@ -219,8 +218,7 @@ class Fcm extends AbstractAdapter
      *
      * @return array
      */
-    public function getPayload()
-    {
+    public function getPayload() {
         $notification = $this->getNotification();
         if (!empty($notification)) {
             $this->payload['notification'] = $notification;
@@ -239,8 +237,7 @@ class Fcm extends AbstractAdapter
      *
      * @return bool
      */
-    public function send()
-    {
+    public function send() {
         $message = $this->_buildMessage();
         $options = $this->_getHttpOptions();
 
@@ -256,11 +253,11 @@ class Fcm extends AbstractAdapter
      * @param array $tokens Token's array
      *
      * @throws \InvalidArgumentException
+     * @return void
      */
-    private function _checkTokens(array $tokens)
-    {
+    private function _checkTokens(array $tokens) {
         if (empty($tokens) || \count($tokens) > 1000) {
-            throw new \InvalidArgumentException('Array must contain at least 1 and at most 1000 tokens.');
+            throw new InvalidArgumentException('Array must contain at least 1 and at most 1000 tokens.');
         }
     }
 
@@ -270,11 +267,11 @@ class Fcm extends AbstractAdapter
      * @param array $notification Notification's array
      *
      * @throws \InvalidArgumentException
+     * @return void
      */
-    private function _checkNotification(array $notification)
-    {
+    private function _checkNotification(array $notification) {
         if (empty($notification) || !isset($notification['title'])) {
-            throw new \InvalidArgumentException('Array must contain at least a key title.');
+            throw new InvalidArgumentException('Array must contain at least a key title.');
         }
 
         $notAllowedKeys = [];
@@ -286,7 +283,8 @@ class Fcm extends AbstractAdapter
 
         if (!empty($notAllowedKeys)) {
             $notAllowedKeys = implode(', ', $notAllowedKeys);
-            throw new \InvalidArgumentException("The following keys are not allowed: {$notAllowedKeys}");
+
+            throw new InvalidArgumentException("The following keys are not allowed: {$notAllowedKeys}");
         }
     }
 
@@ -296,11 +294,11 @@ class Fcm extends AbstractAdapter
      * @param array $datas Datas's array
      *
      * @throws \InvalidArgumentException
+     * @return void
      */
-    private function _checkDatas(array $datas)
-    {
+    private function _checkDatas(array $datas) {
         if (empty($datas)) {
-            throw new \InvalidArgumentException('Array can not be empty.');
+            throw new InvalidArgumentException('Array can not be empty.');
         }
     }
 
@@ -310,11 +308,11 @@ class Fcm extends AbstractAdapter
      * @param array $parameters Parameters's array
      *
      * @throws \InvalidArgumentException
+     * @return void
      */
-    private function _checkParameters(array $parameters)
-    {
+    private function _checkParameters(array $parameters) {
         if (empty($parameters)) {
-            throw new \InvalidArgumentException('Array can not be empty.');
+            throw new InvalidArgumentException('Array can not be empty.');
         }
     }
 
@@ -323,8 +321,7 @@ class Fcm extends AbstractAdapter
      *
      * @return string
      */
-    private function _buildMessage()
-    {
+    private function _buildMessage() {
         $tokens = $this->getTokens();
         $message = (\count($tokens) > 1) ? ['registration_ids' => $tokens] : ['to' => current($tokens)];
 
@@ -344,10 +341,9 @@ class Fcm extends AbstractAdapter
     /**
      * Return options for the HTTP request
      *
-     * @return array $options
+     * @return array
      */
-    private function _getHttpOptions()
-    {
+    private function _getHttpOptions() {
         $options = Hash::merge($this->getConfig('http'), [
             'type' => 'json',
             'headers' => [
@@ -358,4 +354,5 @@ class Fcm extends AbstractAdapter
 
         return $options;
     }
+
 }

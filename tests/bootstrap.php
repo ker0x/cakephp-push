@@ -1,4 +1,5 @@
 <?php
+
 use Cake\Cache\Cache;
 use Cake\Core\Configure;
 use Cake\Core\Plugin;
@@ -20,7 +21,7 @@ define('TMP', ROOT . 'tests' . DS . 'tmp' . DS);
 define('CACHE', TMP);
 define('LOGS', TMP);
 
-$loader = new \Cake\Core\ClassLoader;
+$loader = new \Cake\Core\ClassLoader();
 $loader->register();
 
 $loader->addNamespace('Cake\Test\Fixture', ROOT . '/vendor/cakephp/cakephp/tests/Fixture');
@@ -114,4 +115,4 @@ Configure::write([
     ],
 ]);
 
-Plugin::load('Kerox\Push', ['path' => ROOT]);
+Plugin::getCollection()->add(new Kerox\Push\Plugin());
